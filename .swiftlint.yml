@@ -8,6 +8,7 @@ analyzer_rules:
 opt_in_rules:
   - all
 disabled_rules:
+  - identifier_name
   - anonymous_argument_in_multiline_closure
   - anyobject_protocol
   - closure_body_length

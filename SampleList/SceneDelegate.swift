@@ -2,9 +2,6 @@
 //  SceneDelegate.swift
 //  SampleList
 //
-//  Created by chiayu Yen on 2024/4/5.
-//
-
 import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
