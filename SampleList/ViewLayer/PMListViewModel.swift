@@ -28,7 +28,7 @@ class PMListViewModel {
     struct Output {
         let dataChanged: Driver<[any PMCellDisplayable]>
         let indicator: Driver<Bool>
-        let errorDisplay: Driver<Error?>
+        let errorDisplay: Driver<ErrorDisplay?>
         let layoutSwitch: Driver<ListLayout>
     }
 
@@ -41,17 +41,25 @@ class PMListViewModel {
     }
 
     func transfrom(input: Input) -> Output {
+        let errorOutput: PublishRelay<Error?> = .init()
+        let indicatorOuput: PublishRelay<Bool> = .init()
         let fetchWhenDataEmpty = input.isViewAppear
             .filter({ $0 == true })
             .flatMapLatest({ [weak self] _ -> Driver<[PokemonList.PokemonSource]> in
                 guard let self else { return .empty() }
-                return self.useCase.fetchIfEmpty().asDriver(onErrorJustReturn: .init())
+                return self.useCase.fetchIfEmpty()
+                    .trackError(errorRelay: errorOutput)
+                    .trackIndicator(indicator: indicatorOuput)
+                    .asDriver(onErrorJustReturn: .init())
             })
 
         let refresh = input.refresh
             .flatMapLatest({ [weak self] _ -> Driver<[PokemonList.PokemonSource]> in
                 guard let self else { return .empty() }
-                return self.useCase.refresh().asDriver(onErrorJustReturn: .init())
+                return self.useCase.refresh()
+                    .trackError(errorRelay: errorOutput)
+                    .trackIndicator(indicator: indicatorOuput)
+                    .asDriver(onErrorJustReturn: .init())
             })
 
         let _loadMoreOffset = loadmoreOffset
@@ -60,15 +68,18 @@ class PMListViewModel {
             return scrollInfo.offst.y > (scrollInfo.contentSize.height - _loadMoreOffset)
         }).flatMapLatest({ [weak self] _ -> Driver<[PokemonList.PokemonSource]> in
             guard let self else { return .empty() }
-            return self.useCase.loadmore().asDriver(onErrorJustReturn: .init())
+            return self.useCase.loadmore()
+                .trackError(errorRelay: errorOutput)
+                .trackIndicator(indicator: indicatorOuput)
+                .asDriver(onErrorJustReturn: .init())
         })
 
         let dataChanged = Driver.merge(fetchWhenDataEmpty, refresh, loadMore)
             .map(transDataToDisplayModel(pokemonSource:))
 
         return .init(dataChanged: dataChanged,
-                     indicator: .empty(),
-                     errorDisplay: .empty(),
+                     indicator: indicatorOuput.asDriver(onErrorJustReturn: false),
+                     errorDisplay: errorOutput.map({ $0?.covertToDisplayError() }).asDriver(onErrorJustReturn: nil),
                      layoutSwitch: .empty()
         )
     }

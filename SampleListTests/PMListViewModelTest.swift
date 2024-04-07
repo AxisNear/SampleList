@@ -97,22 +97,96 @@ final class PMListViewModelTest: XCTestCase {
         let result = observer.events.map(\.time)
         XCTAssertEqual(result, [3])
     }
+    
+    func testInidicator() {
+        let refresh = scheduler.createColdObservable([
+            .next(1, ()),
+            .next(2, ())
+        ]).asDriver(onErrorDriveWith: .empty())
+
+        let vm = PMListViewModel(useCase: fakeUseCase)
+        let output = vm.transfrom(input: .init(isViewAppear: .empty(),
+                                               scrollInfo: .empty(),
+                                               refresh: refresh,
+                                               switchClick: .empty(),
+                                               favriateClick: .empty()))
+
+        let observer = scheduler.createObserver(Bool.self)
+        let bag = DisposeBag()
+        output.dataChanged
+            .drive()
+            .disposed(by: bag)
+        
+        output.indicator
+            .drive(observer)
+            .disposed(by: bag)
+
+        scheduler.start()
+        let result = observer.events.map(\.value)
+        XCTAssertEqual(result, [.next(true), .next(false), .next(true), .next(false)])
+    }
+
+    func testError() {
+
+        let refresh = scheduler.createColdObservable([
+            .next(1, ()),
+            .next(3, ())
+        ]).asDriver(onErrorDriveWith: .empty())
+
+
+
+        let vm = PMListViewModel(useCase: fakeUseCase)
+        let output = vm.transfrom(input: .init(isViewAppear: .empty(),
+                                               scrollInfo: .empty(),
+                                               refresh: refresh,
+                                               switchClick: .empty(),
+                                               favriateClick: .empty()))
+        fakeUseCase.sendError = true
+        scheduler.scheduleAt(2, action: { [weak fakeUseCase] in
+            fakeUseCase?.sendError = false
+        })
+
+        let observer = scheduler.createObserver(ErrorDisplay?.self)
+        let bag = DisposeBag()
+        
+        output.dataChanged
+            .drive()
+            .disposed(by: bag)
+
+        output.errorDisplay
+            .drive(observer)
+            .disposed(by: bag)
+
+        scheduler.start()
+        let result = observer.events.map(\.value)
+        typealias ErrorDisplay = SampleList.ErrorDisplay
+        XCTAssertEqual(result, [.next(ErrorDisplay()), .next(nil)])
+    }
 }
 
 private class FakeListUseCase: PokemonListUseCaseProtocol {
     var pokemonSources: [SampleList.PokemonList.PokemonSource] = .init()
     var hasPokemondSources: Bool = false
     var canLoadMore: Bool = false
-
+    var sendError: Bool = false
     func fetchIfEmpty() -> RxSwift.Observable<[SampleList.PokemonList.PokemonSource]> {
+        if sendError == true {
+            return .error(NSError())
+        }
         return .just(.init())
     }
 
     func refresh() -> Observable<[PokemonList.PokemonSource]> {
+        if sendError == true {
+            return .error(NSError())
+        }
         return .just(.init())
     }
 
     func loadmore() -> Observable<[PokemonList.PokemonSource]> {
+        if sendError == true {
+            return .error(NSError())
+        }
         return .just(.init())
     }
 }
