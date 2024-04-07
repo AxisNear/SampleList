@@ -1,16 +1,13 @@
-//  PokemonUsecase.swift
-//  SampleList
-//
 
 import Foundation
 import RxSwift
 
-class PokemonListUseCase {
-    let remoteRepo: PokemonRemoteRepoProtocol
+class DefaultPMListUseCase {
+    let remoteRepo: PMRemoteRepoProtocol
     private(set) var pokemonSources: [PokemonList.PokemonSource] = .init()
     private var nextUrl: String?
 
-    init(remoteRepo: PokemonRemoteRepoProtocol = PokemonRemoteRepo()) {
+    init(remoteRepo: PMRemoteRepoProtocol = PMRemoteRepo()) {
         self.remoteRepo = remoteRepo
     }
 

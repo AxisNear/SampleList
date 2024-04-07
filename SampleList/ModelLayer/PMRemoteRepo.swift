@@ -1,16 +1,12 @@
-//
-//  PokeMonServeice.swift
-//  SampleList
-//
 import Foundation
 import RxSwift
 
-protocol PokemonRemoteRepoProtocol {
+protocol PMRemoteRepoProtocol {
     func fetchPokemonList(url: String) -> Observable<PokemonList>
     func fetchPokemonInfoForm(name: String) -> Observable<PokemonInfo>
 }
 
-class PokemonRemoteRepo: PokemonRemoteRepoProtocol {
+class PMRemoteRepo: PMRemoteRepoProtocol {
     func fetchPokemonList(url: String) -> Observable<PokemonList> {
         return .empty()
     }

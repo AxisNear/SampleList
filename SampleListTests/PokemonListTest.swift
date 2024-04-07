@@ -15,7 +15,7 @@ final class PokemonListUseCaseTest: XCTestCase {
     func testRefresh() {
         let bag: DisposeBag = .init()
         var repo = FakeRepo()
-        let useCase = PokemonListUseCase(remoteRepo: repo)
+        let useCase = DefaultPMListUseCase(remoteRepo: repo)
         XCTAssertEqual(useCase.canLoadMore, false)
         
         let obsever = scheduler.createObserver([PokemonList.PokemonSource].self)
@@ -39,7 +39,7 @@ final class PokemonListUseCaseTest: XCTestCase {
     func testLoadmore() {
         let bag: DisposeBag = .init()
         var repo = FakeRepo()
-        let useCase = PokemonListUseCase(remoteRepo: repo)
+        let useCase = DefaultPMListUseCase(remoteRepo: repo)
         XCTAssertEqual(useCase.canLoadMore, false)
 
         let obsever = scheduler.createObserver([PokemonList.PokemonSource].self)
@@ -74,7 +74,7 @@ final class PokemonListUseCaseTest: XCTestCase {
     }
 }
 
-fileprivate class FakeRepo: PokemonRemoteRepoProtocol {
+fileprivate class FakeRepo: PMRemoteRepoProtocol {
     var sendError: Bool = false
     func fetchPokemonList(url: String) -> Observable<PokemonList> {
         if sendError == true {
