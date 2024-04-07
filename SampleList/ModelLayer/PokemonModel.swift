@@ -5,7 +5,7 @@
 import Foundation
 
 struct PokemonList {
-    struct PokemonSource {
+    struct PokemonSource: Equatable {
         let name: String
         let url: String
     }

@@ -2,7 +2,16 @@
 import Foundation
 import RxSwift
 
-class DefaultPMListUseCase {
+protocol PokemonListUseCaseProtocol {
+    var canLoadMore: Bool { get }
+    var pokemonSources: [PokemonList.PokemonSource] { get }
+
+    func fetchIfEmpty() -> Observable<[PokemonList.PokemonSource]>
+    func refresh() -> Observable<[PokemonList.PokemonSource]>
+    func loadmore() -> Observable<[PokemonList.PokemonSource]>
+}
+
+class DefaultPMListUseCase: PokemonListUseCaseProtocol {
     let remoteRepo: PMRemoteRepoProtocol
     private(set) var pokemonSources: [PokemonList.PokemonSource] = .init()
     private var nextUrl: String?
@@ -15,6 +24,11 @@ class DefaultPMListUseCase {
         return nextUrl?.isEmpty == false
     }
 
+    func fetchIfEmpty() -> Observable<[PokemonList.PokemonSource]> {
+        guard pokemonSources.isEmpty else { return .empty() }
+        return refresh()
+    }
+
     func refresh() -> Observable<[PokemonList.PokemonSource]> {
         return remoteRepo.fetchPokemonList(url: "")
             .do(onNext: { [weak self] _list in
@@ -24,8 +38,9 @@ class DefaultPMListUseCase {
                 self?.nextUrl = nil
                 self?.pokemonSources.removeAll()
             })
-            .map({ _list in
-                return _list.result
+            .withUnretained(self)
+            .map({ weakSelf, _ in
+                return weakSelf.pokemonSources
             })
     }
 
@@ -36,8 +51,9 @@ class DefaultPMListUseCase {
                 self?.nextUrl = _list.next
                 self?.pokemonSources += _list.result
             })
-            .map({ _list in
-                return _list.result
+            .withUnretained(self)
+            .map({ weakSelf, _ in
+                return weakSelf.pokemonSources
             })
     }
 }

@@ -1,20 +1,40 @@
-//
-//  PokemonListTest.swift
-//  SampleListTests
 
 import XCTest
 @testable import SampleList
 @testable import RxSwift
 import RxTest
-final class PokemonListUseCaseTest: XCTestCase {
+final class PMListUseCaseTest: XCTestCase {
     var scheduler: TestScheduler!
     override func setUp() {
         super.setUp()
         scheduler = .init(initialClock: 0)
     }
+
+    func testFetchIfEmpty() {
+        let bag: DisposeBag = .init()
+        let repo = FakeRepo()
+        let useCase = DefaultPMListUseCase(remoteRepo: repo)
+        XCTAssertEqual(useCase.canLoadMore, false)
+        let obsever = scheduler.createObserver([PokemonList.PokemonSource].self)
+        useCase.fetchIfEmpty()
+            .subscribe(obsever)
+            .disposed(by: bag)
+
+        XCTAssertEqual(useCase.pokemonSources.count, 2)
+        XCTAssertEqual(useCase.canLoadMore, true)
+
+        useCase.fetchIfEmpty()
+            .subscribe(obsever)
+            .disposed(by: bag)
+
+        let result = obsever.events.compactMap({ $0.value })
+        XCTAssertEqual(result, [.next(FakeRepo.fakeData), .completed, .completed])
+
+    }
+
     func testRefresh() {
         let bag: DisposeBag = .init()
-        var repo = FakeRepo()
+        let repo = FakeRepo()
         let useCase = DefaultPMListUseCase(remoteRepo: repo)
         XCTAssertEqual(useCase.canLoadMore, false)
         
@@ -38,7 +58,7 @@ final class PokemonListUseCaseTest: XCTestCase {
 
     func testLoadmore() {
         let bag: DisposeBag = .init()
-        var repo = FakeRepo()
+        let repo = FakeRepo()
         let useCase = DefaultPMListUseCase(remoteRepo: repo)
         XCTAssertEqual(useCase.canLoadMore, false)
 
@@ -75,14 +95,14 @@ final class PokemonListUseCaseTest: XCTestCase {
 }
 
 fileprivate class FakeRepo: PMRemoteRepoProtocol {
+    static var fakeData: [PokemonList.PokemonSource] = [.init(name: "", url: ""), .init(name: "", url: "")]
     var sendError: Bool = false
     func fetchPokemonList(url: String) -> Observable<PokemonList> {
         if sendError == true {
             return .error(NSError())
         }
-        let data: [PokemonList.PokemonSource] = [.init(name: "", url: ""),
-                        .init(name: "", url: "")
-                       ]
+        let data: [PokemonList.PokemonSource] = Self.fakeData
+
         let isRefresh = url.isEmpty
         if isRefresh {
             return .just(PokemonList.init(result: data, next: "testNext"))
