@@ -5,10 +5,10 @@
 //  Created by chiayu Yen on 2024/4/7.
 //
 
-import XCTest
+@testable import RxSwift
 import RxTest
 @testable import SampleList
-@testable import RxSwift
+import XCTest
 
 final class PMListViewModelTest: XCTestCase {
     var scheduler: TestScheduler!
@@ -34,7 +34,7 @@ final class PMListViewModelTest: XCTestCase {
 
         let observer = scheduler.createObserver([any PMCellDisplayable].self)
         let bag = DisposeBag()
-        
+
         output.dataChanged
             .drive(observer)
             .disposed(by: bag)

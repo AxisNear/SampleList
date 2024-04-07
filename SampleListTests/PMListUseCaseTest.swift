@@ -1,8 +1,9 @@
 
-import XCTest
-@testable import SampleList
 @testable import RxSwift
 import RxTest
+@testable import SampleList
+import XCTest
+
 final class PMListUseCaseTest: XCTestCase {
     var scheduler: TestScheduler!
     override func setUp() {
@@ -27,9 +28,8 @@ final class PMListUseCaseTest: XCTestCase {
             .subscribe(obsever)
             .disposed(by: bag)
 
-        let result = obsever.events.compactMap({ $0.value })
+        let result = obsever.events.map(\.value)
         XCTAssertEqual(result, [.next(FakeRepo.fakeData), .completed, .completed])
-
     }
 
     func testRefresh() {
@@ -37,7 +37,7 @@ final class PMListUseCaseTest: XCTestCase {
         let repo = FakeRepo()
         let useCase = DefaultPMListUseCase(remoteRepo: repo)
         XCTAssertEqual(useCase.canLoadMore, false)
-        
+
         let obsever = scheduler.createObserver([PokemonList.PokemonSource].self)
         useCase.refresh()
             .subscribe(obsever)
@@ -94,7 +94,7 @@ final class PMListUseCaseTest: XCTestCase {
     }
 }
 
-fileprivate class FakeRepo: PMRemoteRepoProtocol {
+private class FakeRepo: PMRemoteRepoProtocol {
     static var fakeData: [PokemonList.PokemonSource] = [.init(name: "", url: ""), .init(name: "", url: "")]
     var sendError: Bool = false
     func fetchPokemonList(url: String) -> Observable<PokemonList> {
@@ -105,18 +105,15 @@ fileprivate class FakeRepo: PMRemoteRepoProtocol {
 
         let isRefresh = url.isEmpty
         if isRefresh {
-            return .just(PokemonList.init(result: data, next: "testNext"))
+            return .just(PokemonList(result: data, next: "testNext"))
         } else if url == "testNext" {
-            return .just(PokemonList.init(result: data, next: "testNext2"))
+            return .just(PokemonList(result: data, next: "testNext2"))
         } else {
-            return .just(PokemonList.init(result: data, next: ""))
+            return .just(PokemonList(result: data, next: ""))
         }
-
     }
+
     func fetchPokemonInfoForm(name: String) -> Observable<PokemonInfo> {
         return .empty()
     }
 }
-
-
-

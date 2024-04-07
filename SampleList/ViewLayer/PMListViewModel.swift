@@ -16,6 +16,7 @@ class PMListViewModel {
         let offst: CGPoint
         let contentSize: CGSize
     }
+
     struct Input {
         let isViewAppear: Driver<Bool>
         let scrollInfo: Driver<ScrollInfo>
@@ -23,6 +24,7 @@ class PMListViewModel {
         let switchClick: Driver<Void>
         let favriateClick: Driver<Void>
     }
+
     struct Output {
         let dataChanged: Driver<[any PMCellDisplayable]>
         let indicator: Driver<Bool>
@@ -81,4 +83,5 @@ protocol PMCellDisplayable {
     var url: String { get }
 }
 
+// MARK: - PMCellDisplayable
 extension PokemonList.PokemonSource: PMCellDisplayable {}

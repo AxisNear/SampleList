@@ -7,6 +7,4 @@
 
 import XCTest
 
-final class SampleListUITests: XCTestCase {
-
-}
+final class SampleListUITests: XCTestCase {}

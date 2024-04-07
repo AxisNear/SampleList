@@ -22,11 +22,10 @@ class PMListVC: UIViewController {
         let output = viewModel.transfrom(input:
             .init(
                 isViewAppear: rx.isViewAppear,
-                scrollInfo: .empty(),                
+                scrollInfo: .empty(),
                 refresh: .empty(),
                 switchClick: .empty(),
                 favriateClick: .empty())
         )
-
     }
 }
