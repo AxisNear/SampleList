@@ -6,11 +6,13 @@ import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
-    func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        guard (scene as? UIWindowScene) != nil else { return }
 
-        let newWindow: UIWindow = .init(frame: UIScreen.main.bounds)
-        newWindow.rootViewController = ViewController()
+    func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+        guard let windowScene = scene as? UIWindowScene else { return }
+
+        let newWindow: UIWindow = .init(windowScene: windowScene)
+        let vc = PMListVC(viewModel: PMListViewModel())
+        newWindow.rootViewController = vc
         window = newWindow
         window?.makeKeyAndVisible()
     }

@@ -71,15 +71,17 @@ final class PMListViewModelTest: XCTestCase {
 
     func testLoadMore() {
         typealias ScrollInfo = PMListViewModel.ScrollInfo
+
         let offset = scheduler.createColdObservable([
-            .next(0, ScrollInfo(offst: CGPoint(x: 0, y: 0), contentSize: CGSize(width: 100, height: 1000))),
-            .next(1, ScrollInfo(offst: CGPoint(x: 0, y: 200), contentSize: CGSize(width: 100, height: 1000))),
-            .next(2, ScrollInfo(offst: CGPoint(x: 0, y: 400), contentSize: CGSize(width: 100, height: 1000))),
-            .next(3, ScrollInfo(offst: CGPoint(x: 0, y: 600), contentSize: CGSize(width: 100, height: 1000))),
-            .next(4, ScrollInfo(offst: CGPoint(x: 0, y: 800), contentSize: CGSize(width: 100, height: 2000)))
+            .next(0, ScrollInfo.zero()),
+            .next(1, ScrollInfo(offst: CGPoint(x: 0, y: 0), contentSize: CGSize(width: 100, height: 1000), boundSize: .init(width: 414, height: 713))),
+            .next(2, ScrollInfo(offst: CGPoint(x: 0, y: 200), contentSize: CGSize(width: 100, height: 1000), boundSize: .init(width: 414, height: 713))),
+            .next(3, ScrollInfo(offst: CGPoint(x: 0, y: 400), contentSize: CGSize(width: 100, height: 2000), boundSize: .init(width: 414, height: 713))),
+            .next(4, ScrollInfo(offst: CGPoint(x: 0, y: 1600), contentSize: CGSize(width: 100, height: 2000), boundSize: .init(width: 414, height: 713))),
+            .next(5, ScrollInfo(offst: CGPoint(x: 0, y: 1800), contentSize: CGSize(width: 100, height: 3000), boundSize: .init(width: 414, height: 713)))
         ]).asDriver(onErrorDriveWith: .empty())
 
-        let vm = PMListViewModel(useCase: fakeUseCase, loadMoreOffset: 500)
+        let vm = PMListViewModel(useCase: fakeUseCase, loadMoreOffset: 100)
         let output = vm.transfrom(input: .init(isViewAppear: .empty(),
                                                scrollInfo: offset,
                                                refresh: .empty(),
@@ -95,7 +97,7 @@ final class PMListViewModelTest: XCTestCase {
 
         scheduler.start()
         let result = observer.events.map(\.time)
-        XCTAssertEqual(result, [3])
+        XCTAssertEqual(result, [2, 4])
     }
     
     func testInidicator() {

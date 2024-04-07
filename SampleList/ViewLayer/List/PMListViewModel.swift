@@ -15,6 +15,10 @@ class PMListViewModel {
     struct ScrollInfo {
         let offst: CGPoint
         let contentSize: CGSize
+        let boundSize: CGSize
+        static func zero() -> Self {
+            return .init(offst: .zero, contentSize: .zero, boundSize: .zero)
+        }
     }
 
     struct Input {
@@ -35,7 +39,7 @@ class PMListViewModel {
     let useCase: PokemonListUseCaseProtocol
     let loadmoreOffset: CGFloat
 
-    init(useCase: PokemonListUseCaseProtocol = DefaultPMListUseCase(), loadMoreOffset: CGFloat = 300) {
+    init(useCase: PokemonListUseCaseProtocol = DefaultPMListUseCase(), loadMoreOffset: CGFloat = 100) {
         self.useCase = useCase
         self.loadmoreOffset = loadMoreOffset
     }
@@ -65,7 +69,12 @@ class PMListViewModel {
         let _loadMoreOffset = loadmoreOffset
 
         let loadMore = input.scrollInfo.filter({ scrollInfo in
-            return scrollInfo.offst.y > (scrollInfo.contentSize.height - _loadMoreOffset)
+            guard scrollInfo.boundSize != .zero,
+                  scrollInfo.offst.y > 0,
+                  scrollInfo.contentSize != .zero else {
+                return false
+            }
+            return scrollInfo.offst.y > (scrollInfo.contentSize.height - scrollInfo.boundSize.height - _loadMoreOffset)
         }).flatMapLatest({ [weak self] _ -> Driver<[PokemonList.PokemonSource]> in
             guard let self else { return .empty() }
             return self.useCase.loadmore()

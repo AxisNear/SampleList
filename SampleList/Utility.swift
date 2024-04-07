@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Kingfisher
 import RxCocoa
 import RxSwift
 
@@ -45,7 +46,6 @@ extension Reactive where Base: UIViewController {
     }
 }
 
-
 struct ErrorDisplay: Equatable {
     let tile: String = "網路錯誤嘍"
 }
@@ -53,5 +53,47 @@ struct ErrorDisplay: Equatable {
 extension Error {
     func covertToDisplayError() -> ErrorDisplay {
         return ErrorDisplay()
+    }
+}
+
+extension UIImageView {
+    func downLaodImageWith(url: String) {
+        kf.setImage(with: URL(string: url))
+    }
+
+    func cancelDownloadImage() {
+        kf.cancelDownloadTask()
+    }
+}
+
+extension UIView {
+    var showErrorToast: Binder<ErrorDisplay?> {
+        return .init(self, binding: { _weakView, errorInfo in
+            guard let errorInfo else { return }
+            let toastLabel = UILabel(frame: .zero)
+            _weakView.addSubview(toastLabel)
+            toastLabel.layer.cornerRadius = 10
+            toastLabel.layer.masksToBounds = true
+            toastLabel.backgroundColor = .lightGray.withAlphaComponent(0.6)
+            toastLabel.textAlignment = .center
+            toastLabel.snp.makeConstraints({
+                $0.center.equalToSuperview()
+                $0.width.equalTo(200)
+                $0.height.equalTo(50)
+            })
+
+            toastLabel.text = errorInfo.tile
+            toastLabel.alpha = 0
+
+            UIView.animate(withDuration: 0.3, animations: {
+                toastLabel.alpha = 1
+            }, completion: { _ in
+                UIView.animate(withDuration: 0.3, delay: 1, animations: {
+                    toastLabel.alpha = 0
+                },completion: { _ in
+                    toastLabel.removeFromSuperview()
+                })
+            })
+        })
     }
 }
