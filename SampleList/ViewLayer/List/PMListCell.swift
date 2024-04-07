@@ -63,7 +63,7 @@ class PMListCell: UICollectionViewCell {
             $0.leading.equalToSuperview().offset(8)
             $0.centerY.equalToSuperview()
         })
-        
+
         imageView.snp.makeConstraints({
             $0.width.height.equalTo(70)
             $0.top.equalToSuperview().inset(5)

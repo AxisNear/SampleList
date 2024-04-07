@@ -11,11 +11,12 @@ class PMListVC: UIViewController {
     private var dataDisplay: [PMCellDisplayable] = .init()
     private let refreshControl: UIRefreshControl = .init()
     private let indicatorView: UIActivityIndicatorView = {
-        let _indicator = UIActivityIndicatorView.init(style: .large)
+        let _indicator = UIActivityIndicatorView(style: .large)
         _indicator.color = .lightGray
         _indicator.hidesWhenStopped = true
         return _indicator
     }()
+
     private let collectionview: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.estimatedItemSize = .init(width: 400, height: 80)
@@ -89,7 +90,7 @@ class PMListVC: UIViewController {
         })
     }
 
-    private  var indicatroDisplay: Binder<Bool> {
+    private var indicatroDisplay: Binder<Bool> {
         return .init(self, binding: { _weakSelf, show in
             if show {
                 _weakSelf.indicatorView.startAnimating()

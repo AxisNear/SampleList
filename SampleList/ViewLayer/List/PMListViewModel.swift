@@ -16,6 +16,7 @@ class PMListViewModel {
         let offst: CGPoint
         let contentSize: CGSize
         let boundSize: CGSize
+
         static func zero() -> Self {
             return .init(offst: .zero, contentSize: .zero, boundSize: .zero)
         }
