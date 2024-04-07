@@ -81,7 +81,7 @@ class PMListVC: UIViewController {
             .disposed(by: bag)
     }
 
-    var dataChangeDisplay: Binder<[PMCellDisplayable]> {
+    private var dataChangeDisplay: Binder<[PMCellDisplayable]> {
         return .init(self, binding: { _self, datas in
             _self.dataDisplay = datas
             _self.view.layoutIfNeeded()
@@ -89,7 +89,7 @@ class PMListVC: UIViewController {
         })
     }
 
-    var indicatroDisplay: Binder<Bool> {
+    private  var indicatroDisplay: Binder<Bool> {
         return .init(self, binding: { _weakSelf, show in
             if show {
                 _weakSelf.indicatorView.startAnimating()
@@ -118,6 +118,7 @@ extension PMListVC: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PMListCell.cellID, for: indexPath)
+        (cell as? PMListCell)?.config(with: dataDisplay[indexPath.row])
         return cell
     }
 }
