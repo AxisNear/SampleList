@@ -105,11 +105,11 @@ private class FakeRepo: PMRemoteRepoProtocol {
 
         let isRefresh = url.isEmpty
         if isRefresh {
-            return .just(PokemonList(result: data, next: "testNext"))
+            return .just(PokemonList(results: data, next: "testNext"))
         } else if url == "testNext" {
-            return .just(PokemonList(result: data, next: "testNext2"))
+            return .just(PokemonList(results: data, next: "testNext2"))
         } else {
-            return .just(PokemonList(result: data, next: ""))
+            return .just(PokemonList(results: data, next: ""))
         }
     }
 

@@ -33,7 +33,7 @@ class DefaultPMListUseCase: PokemonListUseCaseProtocol {
         return remoteRepo.fetchPokemonList(url: "")
             .do(onNext: { [weak self] _list in
                 self?.nextUrl = _list.next
-                self?.pokemonSources = _list.result
+                self?.pokemonSources = _list.results
             }, onError: { [weak self] _ in
                 self?.nextUrl = nil
                 self?.pokemonSources.removeAll()
@@ -49,7 +49,7 @@ class DefaultPMListUseCase: PokemonListUseCaseProtocol {
         return remoteRepo.fetchPokemonList(url: nextUrl)
             .do(onNext: { [weak self] _list in
                 self?.nextUrl = _list.next
-                self?.pokemonSources += _list.result
+                self?.pokemonSources += _list.results
             })
             .withUnretained(self)
             .map({ weakSelf, _ in
