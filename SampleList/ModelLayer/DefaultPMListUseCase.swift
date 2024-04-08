@@ -57,14 +57,3 @@ class DefaultPMListUseCase: PokemonListUseCaseProtocol {
             })
     }
 }
-
-
-class DefaultPMCellUseCase {
-    let repo: PMRemoteRepoProtocol
-    init(repo: PMRemoteRepoProtocol = PMRemoteRepo()) {
-        self.repo = repo
-    }
-    func fetchInfoWith(name: String) -> Observable<PokemonInfo> {
-        return repo.fetchPokemonInfoForm(name: name)
-    }
-}

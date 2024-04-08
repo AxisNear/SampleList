@@ -18,13 +18,15 @@
 		40AB8EF52BC0A92500C6192D /* PokemonModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40AB8EF42BC0A92500C6192D /* PokemonModel.swift */; };
 		40AB8EFA2BC0B1E200C6192D /* DefaultPMListUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40AB8EF92BC0B1E200C6192D /* DefaultPMListUseCase.swift */; };
 		40AB8EFD2BC0C07A00C6192D /* PMListUseCaseTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40AB8EFC2BC0C07A00C6192D /* PMListUseCaseTest.swift */; };
-		40AB8F002BC11E5B00C6192D /* PMListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40AB8EFF2BC11E5B00C6192D /* PMListViewModel.swift */; };
+		40AB8F002BC11E5B00C6192D /* PMListVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40AB8EFF2BC11E5B00C6192D /* PMListVM.swift */; };
 		40AB8F022BC1224900C6192D /* PMListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40AB8F012BC1224900C6192D /* PMListVC.swift */; };
 		40AB8F042BC1272E00C6192D /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40AB8F032BC1272E00C6192D /* Utility.swift */; };
 		40AB8F062BC2436200C6192D /* PMListViewModelTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40AB8F052BC2436200C6192D /* PMListViewModelTest.swift */; };
 		40AB8F082BC2905C00C6192D /* PMService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40AB8F072BC2905C00C6192D /* PMService.swift */; };
 		40AB8F0B2BC3205100C6192D /* PMListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40AB8F0A2BC3205100C6192D /* PMListCell.swift */; };
-		40AB8F0D2BC3502200C6192D /* PMListCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40AB8F0C2BC3502200C6192D /* PMListCellViewModel.swift */; };
+		40AB8F0D2BC3502200C6192D /* PMListCellVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40AB8F0C2BC3502200C6192D /* PMListCellVM.swift */; };
+		40AB8F102BC35C6B00C6192D /* DefaultPMCellUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40AB8F0F2BC35C6B00C6192D /* DefaultPMCellUseCase.swift */; };
+		40AB8F122BC35CA000C6192D /* FavoriteRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40AB8F112BC35CA000C6192D /* FavoriteRepo.swift */; };
 		A058966AF2493A8DD3760EF7 /* Pods_SampleList.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F88C4F48FF66B2343DA5A9C /* Pods_SampleList.framework */; };
 		D384CAB7BF3C4F9B9FCC2CD9 /* Pods_SampleListTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CB14FB03CC8FABE92FF3CDA /* Pods_SampleListTests.framework */; };
 /* End PBXBuildFile section */
@@ -63,13 +65,15 @@
 		40AB8EF42BC0A92500C6192D /* PokemonModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonModel.swift; sourceTree = "<group>"; };
 		40AB8EF92BC0B1E200C6192D /* DefaultPMListUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultPMListUseCase.swift; sourceTree = "<group>"; };
 		40AB8EFC2BC0C07A00C6192D /* PMListUseCaseTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PMListUseCaseTest.swift; sourceTree = "<group>"; };
-		40AB8EFF2BC11E5B00C6192D /* PMListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PMListViewModel.swift; sourceTree = "<group>"; };
+		40AB8EFF2BC11E5B00C6192D /* PMListVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PMListVM.swift; sourceTree = "<group>"; };
 		40AB8F012BC1224900C6192D /* PMListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PMListVC.swift; sourceTree = "<group>"; };
 		40AB8F032BC1272E00C6192D /* Utility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utility.swift; sourceTree = "<group>"; };
 		40AB8F052BC2436200C6192D /* PMListViewModelTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PMListViewModelTest.swift; sourceTree = "<group>"; };
 		40AB8F072BC2905C00C6192D /* PMService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PMService.swift; sourceTree = "<group>"; };
 		40AB8F0A2BC3205100C6192D /* PMListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PMListCell.swift; sourceTree = "<group>"; };
-		40AB8F0C2BC3502200C6192D /* PMListCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PMListCellViewModel.swift; sourceTree = "<group>"; };
+		40AB8F0C2BC3502200C6192D /* PMListCellVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PMListCellVM.swift; sourceTree = "<group>"; };
+		40AB8F0F2BC35C6B00C6192D /* DefaultPMCellUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultPMCellUseCase.swift; sourceTree = "<group>"; };
+		40AB8F112BC35CA000C6192D /* FavoriteRepo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteRepo.swift; sourceTree = "<group>"; };
 		4CB14FB03CC8FABE92FF3CDA /* Pods_SampleListTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SampleListTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		62BD05E5143C5D8DB5722258 /* Pods-SampleListTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SampleListTests.release.xcconfig"; path = "Target Support Files/Pods-SampleListTests/Pods-SampleListTests.release.xcconfig"; sourceTree = "<group>"; };
 		A5B851FDD341D76249FF4340 /* Pods_SampleList_SampleListUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SampleList_SampleListUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -165,10 +169,12 @@
 		40AB8EF12BC0A78500C6192D /* ModelLayer */ = {
 			isa = PBXGroup;
 			children = (
+				40AB8EF42BC0A92500C6192D /* PokemonModel.swift */,
 				40AB8F072BC2905C00C6192D /* PMService.swift */,
 				40AB8EF22BC0A7A800C6192D /* PMRemoteRepo.swift */,
-				40AB8EF42BC0A92500C6192D /* PokemonModel.swift */,
+				40AB8F112BC35CA000C6192D /* FavoriteRepo.swift */,
 				40AB8EF92BC0B1E200C6192D /* DefaultPMListUseCase.swift */,
+				40AB8F0F2BC35C6B00C6192D /* DefaultPMCellUseCase.swift */,
 			);
 			path = ModelLayer;
 			sourceTree = "<group>";
@@ -185,9 +191,9 @@
 			isa = PBXGroup;
 			children = (
 				40AB8F012BC1224900C6192D /* PMListVC.swift */,
-				40AB8EFF2BC11E5B00C6192D /* PMListViewModel.swift */,
+				40AB8EFF2BC11E5B00C6192D /* PMListVM.swift */,
 				40AB8F0A2BC3205100C6192D /* PMListCell.swift */,
-				40AB8F0C2BC3502200C6192D /* PMListCellViewModel.swift */,
+				40AB8F0C2BC3502200C6192D /* PMListCellVM.swift */,
 			);
 			path = List;
 			sourceTree = "<group>";
@@ -491,14 +497,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				40AB8F102BC35C6B00C6192D /* DefaultPMCellUseCase.swift in Sources */,
 				40AB8F082BC2905C00C6192D /* PMService.swift in Sources */,
 				40AB8EC02BBFE51D00C6192D /* AppDelegate.swift in Sources */,
+				40AB8F122BC35CA000C6192D /* FavoriteRepo.swift in Sources */,
 				40AB8F042BC1272E00C6192D /* Utility.swift in Sources */,
 				40AB8EC22BBFE51D00C6192D /* SceneDelegate.swift in Sources */,
 				40AB8EF52BC0A92500C6192D /* PokemonModel.swift in Sources */,
-				40AB8F0D2BC3502200C6192D /* PMListCellViewModel.swift in Sources */,
+				40AB8F0D2BC3502200C6192D /* PMListCellVM.swift in Sources */,
 				40AB8F022BC1224900C6192D /* PMListVC.swift in Sources */,
-				40AB8F002BC11E5B00C6192D /* PMListViewModel.swift in Sources */,
+				40AB8F002BC11E5B00C6192D /* PMListVM.swift in Sources */,
 				40AB8EF32BC0A7A800C6192D /* PMRemoteRepo.swift in Sources */,
 				40AB8F0B2BC3205100C6192D /* PMListCell.swift in Sources */,
 				40AB8EFA2BC0B1E200C6192D /* DefaultPMListUseCase.swift in Sources */,

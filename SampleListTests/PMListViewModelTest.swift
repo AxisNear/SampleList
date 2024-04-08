@@ -25,7 +25,7 @@ final class PMListViewModelTest: XCTestCase {
             .next(2, false)
         ]).asDriver(onErrorDriveWith: .empty())
 
-        let vm = PMListViewModel(useCase: fakeUseCase)
+        let vm = PMListVM(useCase: fakeUseCase)
         let output = vm.transfrom(input: .init(isViewAppear: mockViewIsAppear,
                                                scrollInfo: .empty(),
                                                refresh: .empty(),
@@ -50,7 +50,7 @@ final class PMListViewModelTest: XCTestCase {
             .next(2, ())
         ]).asDriver(onErrorDriveWith: .empty())
 
-        let vm = PMListViewModel(useCase: fakeUseCase)
+        let vm = PMListVM(useCase: fakeUseCase)
         let output = vm.transfrom(input: .init(isViewAppear: .empty(),
                                                scrollInfo: .empty(),
                                                refresh: refresh,
@@ -70,7 +70,7 @@ final class PMListViewModelTest: XCTestCase {
     }
 
     func testLoadMore() {
-        typealias ScrollInfo = PMListViewModel.ScrollInfo
+        typealias ScrollInfo = PMListVM.ScrollInfo
 
         let offset = scheduler.createColdObservable([
             .next(0, ScrollInfo.zero()),
@@ -81,7 +81,7 @@ final class PMListViewModelTest: XCTestCase {
             .next(5, ScrollInfo(offst: CGPoint(x: 0, y: 1800), contentSize: CGSize(width: 100, height: 3000), boundSize: .init(width: 414, height: 713)))
         ]).asDriver(onErrorDriveWith: .empty())
 
-        let vm = PMListViewModel(useCase: fakeUseCase, loadMoreOffset: 100)
+        let vm = PMListVM(useCase: fakeUseCase, loadMoreOffset: 100)
         let output = vm.transfrom(input: .init(isViewAppear: .empty(),
                                                scrollInfo: offset,
                                                refresh: .empty(),
@@ -106,7 +106,7 @@ final class PMListViewModelTest: XCTestCase {
             .next(2, ())
         ]).asDriver(onErrorDriveWith: .empty())
 
-        let vm = PMListViewModel(useCase: fakeUseCase)
+        let vm = PMListVM(useCase: fakeUseCase)
         let output = vm.transfrom(input: .init(isViewAppear: .empty(),
                                                scrollInfo: .empty(),
                                                refresh: refresh,
@@ -137,7 +137,7 @@ final class PMListViewModelTest: XCTestCase {
 
 
 
-        let vm = PMListViewModel(useCase: fakeUseCase)
+        let vm = PMListVM(useCase: fakeUseCase)
         let output = vm.transfrom(input: .init(isViewAppear: .empty(),
                                                scrollInfo: .empty(),
                                                refresh: refresh,

@@ -5,9 +5,9 @@ import SnapKit
 import UIKit
 
 class PMListVC: UIViewController {
-    private let viewModel: PMListViewModel
+    private let viewModel: PMListVM
     private let bag: DisposeBag = .init()
-    private let didScroll: PublishRelay<PMListViewModel.ScrollInfo> = .init()
+    private let didScroll: PublishRelay<PMListVM.ScrollInfo> = .init()
     private var dataDisplay: [PMCellDisplayable] = .init()
     private let refreshControl: UIRefreshControl = .init()
     private let indicatorView: UIActivityIndicatorView = {
@@ -27,13 +27,13 @@ class PMListVC: UIViewController {
         return collection
     }()
 
-    init(viewModel: PMListViewModel) {
+    init(viewModel: PMListVM) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
 
     required init?(coder: NSCoder) {
-        self.viewModel = PMListViewModel()
+        self.viewModel = PMListVM()
         super.init(coder: coder)
     }
 

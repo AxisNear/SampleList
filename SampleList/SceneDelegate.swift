@@ -11,7 +11,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = scene as? UIWindowScene else { return }
 
         let newWindow: UIWindow = .init(windowScene: windowScene)
-        let vc = PMListVC(viewModel: PMListViewModel())
+        let vc = PMListVC(viewModel: PMListVM())
         newWindow.rootViewController = vc
         window = newWindow
         window?.makeKeyAndVisible()

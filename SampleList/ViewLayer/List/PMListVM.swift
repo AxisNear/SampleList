@@ -7,7 +7,7 @@ import Foundation
 import RxCocoa
 import RxSwift
 
-class PMListViewModel {
+class PMListVM {
     enum ListLayout {
         case listStle, gridStyle
     }
