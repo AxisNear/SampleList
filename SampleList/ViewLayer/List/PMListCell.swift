@@ -16,9 +16,16 @@ class PMListCell: UICollectionViewCell {
     let imageView = UIImageView()
     let idLabel = UILabel()
     let typeslabel = UILabel()
-    let viewModel: PMCellViemModel = .init()
+    let viewModel: PMListCellVM = .init()
     let bag = DisposeBag()
     let sourceChanged: PublishRelay<String> = .init()
+    private var pokemonName: String = ""
+    let favorteBtn: UIButton = {
+        let btn = UIButton(type: .custom)
+        btn.setImage(UIImage(systemName: "star"), for: .normal)
+        btn.setImage(UIImage(systemName: "star.fill"), for: .selected)
+        return btn
+    }()
     let indicator: UIActivityIndicatorView = {
         let _indicator = UIActivityIndicatorView(style: .medium)
         _indicator.hidesWhenStopped = true
@@ -39,7 +46,7 @@ class PMListCell: UICollectionViewCell {
     }
 
     func config(with cellDisplay: PMCellDisplayable) {
-        nameLabel.text = cellDisplay.name
+        pokemonName = cellDisplay.name
         sourceChanged.accept(cellDisplay.name)
     }
 
@@ -49,6 +56,7 @@ class PMListCell: UICollectionViewCell {
         contentView.addSubview(idLabel)
         contentView.addSubview(typeslabel)
         contentView.addSubview(imageView)
+        contentView.addSubview(favorteBtn)
 
         let contentStakeView = UIStackView(frame: .zero)
         contentStakeView.axis = .vertical
@@ -73,7 +81,15 @@ class PMListCell: UICollectionViewCell {
         contentStakeView.snp.makeConstraints({
             $0.leading.equalTo(imageView.snp.trailing).offset(8)
             $0.top.bottom.equalToSuperview()
-            $0.trailing.equalToSuperview().inset(8)
+        })
+
+        favorteBtn.setContentCompressionResistancePriority(.required, for: .horizontal)
+        favorteBtn.setContentHuggingPriority(.required, for: .horizontal)
+        favorteBtn.snp.makeConstraints({
+            $0.width.height.equalTo(50)
+            $0.leading.equalTo(contentStakeView.snp.trailing).offset(8)
+            $0.centerY.equalToSuperview()
+            $0.trailing.equalToSuperview().inset(15)
         })
 
         imageView.backgroundColor = .lightGray
@@ -83,7 +99,15 @@ class PMListCell: UICollectionViewCell {
     }
 
     private func bindEvent() {
-        let output = viewModel.trasfrom(input: .init(sourceChanged: sourceChanged.asDriver(onErrorJustReturn: "")))
+        let btnClick = favorteBtn.rx.controlEvent(.touchUpInside)
+            .withUnretained(self)
+            .map({ _self, _ in
+                return _self.pokemonName
+            })
+            .asDriver(onErrorDriveWith: .empty())
+
+        let output = viewModel.trasfrom(input: .init(sourceChanged: sourceChanged.asDriver(onErrorJustReturn: ""),
+                                                     favoriteClick: btnClick))
 
         let prepareReuse: Driver<PokemonInfo?> = rx.methodInvoked(#selector(prepareForReuse))
             .asDriver(onErrorDriveWith: .empty())
@@ -96,6 +120,10 @@ class PMListCell: UICollectionViewCell {
 
         output.indicator
             .drive(indicator.rx.isAnimating)
+            .disposed(by: bag)
+
+        output.isFavorite
+            .drive(favorteBtn.rx.isSelected)
             .disposed(by: bag)
     }
 
@@ -119,7 +147,8 @@ class PMListCell: UICollectionViewCell {
     override func preferredLayoutAttributesFitting(_ layoutAttributes: UICollectionViewLayoutAttributes) -> UICollectionViewLayoutAttributes {
         let preferred = super.preferredLayoutAttributesFitting(layoutAttributes)
         var modifyRect = preferred.frame
-        modifyRect.size = contentView.systemLayoutSizeFitting(CGSize(width: UIScreen.main.bounds.width, height: 80),
+
+        modifyRect.size = contentView.systemLayoutSizeFitting(CGSize(width: window?.bounds.width ?? 300, height: 80),
                                                               withHorizontalFittingPriority: .defaultHigh,
                                                               verticalFittingPriority: .defaultHigh)
         preferred.frame = modifyRect

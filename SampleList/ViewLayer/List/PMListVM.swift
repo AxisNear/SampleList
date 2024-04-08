@@ -7,7 +7,7 @@ import Foundation
 import RxCocoa
 import RxSwift
 
-class PMListViewModel {
+class PMListVM {
     enum ListLayout {
         case listStle, gridStyle
     }
@@ -27,7 +27,7 @@ class PMListViewModel {
         let scrollInfo: Driver<ScrollInfo>
         let refresh: Driver<Void>
         let switchClick: Driver<Void>
-        let favriateClick: Driver<Void>
+        let favriateSwitch: Driver<Void>
     }
 
     struct Output {
@@ -84,7 +84,13 @@ class PMListViewModel {
                 .asDriver(onErrorJustReturn: .init())
         })
 
-        let dataChanged = Driver.merge(fetchWhenDataEmpty, refresh, loadMore)
+        let favoriteSwitch = input.favriateSwitch
+            .flatMapLatest({ [weak self] _ -> Driver<[PokemonList.PokemonSource]> in
+                guard let self else { return .empty() }
+                return self.useCase.toggleFavoriteMode()
+                    .asDriver(onErrorJustReturn: [])
+            })
+        let dataChanged = Driver.merge(fetchWhenDataEmpty, refresh, loadMore, favoriteSwitch)
             .map(transDataToDisplayModel(pokemonSource:))
 
         return .init(dataChanged: dataChanged,

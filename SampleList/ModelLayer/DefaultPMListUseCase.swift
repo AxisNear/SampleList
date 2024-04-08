@@ -1,4 +1,3 @@
-
 import Foundation
 import RxSwift
 
@@ -9,15 +8,21 @@ protocol PokemonListUseCaseProtocol {
     func fetchIfEmpty() -> Observable<[PokemonList.PokemonSource]>
     func refresh() -> Observable<[PokemonList.PokemonSource]>
     func loadmore() -> Observable<[PokemonList.PokemonSource]>
+
+    func toggleFavoriteMode() -> Observable<[PokemonList.PokemonSource]>
 }
 
 class DefaultPMListUseCase: PokemonListUseCaseProtocol {
-    let remoteRepo: PMRemoteRepoProtocol
+    private let remoteRepo: PMRemoteRepoProtocol
+    private let favortieRepo: FavoriteRepoProtocol
     private(set) var pokemonSources: [PokemonList.PokemonSource] = .init()
     private var nextUrl: String?
+    private var isFavoriteMode = false
 
-    init(remoteRepo: PMRemoteRepoProtocol = PMRemoteRepo()) {
+    init(remoteRepo: PMRemoteRepoProtocol = PMRemoteRepo(),
+         favorieRepo: FavoriteRepoProtocol = FavoriteRepo.shared) {
         self.remoteRepo = remoteRepo
+        self.favortieRepo = favorieRepo
     }
 
     var canLoadMore: Bool {
@@ -56,15 +61,14 @@ class DefaultPMListUseCase: PokemonListUseCaseProtocol {
                 return weakSelf.pokemonSources
             })
     }
-}
 
-
-class DefaultPMCellUseCase {
-    let repo: PMRemoteRepoProtocol
-    init(repo: PMRemoteRepoProtocol = PMRemoteRepo()) {
-        self.repo = repo
-    }
-    func fetchInfoWith(name: String) -> Observable<PokemonInfo> {
-        return repo.fetchPokemonInfoForm(name: name)
+    func toggleFavoriteMode() -> Observable<[PokemonList.PokemonSource]> {
+        isFavoriteMode.toggle()
+        if isFavoriteMode {
+            let sourceJustName = favortieRepo.favoriteList.map({ PokemonList.PokemonSource(name: $0, url: "") })
+            return .just(sourceJustName)
+        } else {
+            return .just(pokemonSources)
+        }
     }
 }

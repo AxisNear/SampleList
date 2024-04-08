@@ -1,10 +1,11 @@
 
-import Foundation
 import Alamofire
+import Foundation
 import RxSwift
 
 enum PokemonAPI {
     case listPokemon, info(String)
+
     var endPoint: String {
         switch self {
         case .listPokemon:

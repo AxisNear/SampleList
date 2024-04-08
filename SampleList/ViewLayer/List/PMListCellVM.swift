@@ -9,13 +9,15 @@ import Foundation
 import RxCocoa
 import RxSwift
 
-class PMCellViemModel {
+class PMListCellVM {
     struct Input {
         let sourceChanged: Driver<String>
+        let favoriteClick: Driver<String>
     }
 
     struct Output {
         let infoChanged: Driver<PokemonInfo?>
+        let isFavorite: Driver<Bool>
         let indicator: Driver<Bool>
     }
 
@@ -35,7 +37,22 @@ class PMCellViemModel {
                     .map({ info -> PokemonInfo? in return info })
                     .asDriver(onErrorJustReturn: nil)
             })
+
+        let favoriteEvnet = input.favoriteClick
+            .flatMapLatest({ [weak useCase] name -> Driver<Bool> in
+                guard let useCase else { return .empty() }
+                return useCase.favoirteToggle(name: name)
+                    .trackIndicator(indicator: indicatorTracker)
+                    .asDriver(onErrorDriveWith: .empty())
+            })
+
+        let checkFavoritState = input.sourceChanged
+            .map({ [weak useCase] name -> Bool in
+                guard let useCase else { return false }
+                return useCase.favoriteState(name: name)
+            })
         return .init(infoChanged: fetchdata,
+                     isFavorite: .merge(favoriteEvnet, checkFavoritState),
                      indicator: indicatorTracker.asDriver(onErrorJustReturn: false))
     }
 }
