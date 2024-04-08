@@ -21,7 +21,7 @@ class DefaultPMCellUseCase {
     }
 
     func favoriteState(name: String) -> Bool {
-        return favoriteRepo.getFavortie(name: name)
+        return favoriteRepo.isFavorite(name: name)
     }
 
     func favoirteToggle(name: String) -> Observable<Bool> {

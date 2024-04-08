@@ -12,7 +12,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         let newWindow: UIWindow = .init(windowScene: windowScene)
         let vc = PMListVC(viewModel: PMListVM())
-        newWindow.rootViewController = vc
+        let navi = UINavigationController(rootViewController: vc)
+        newWindow.rootViewController = navi
         window = newWindow
         window?.makeKeyAndVisible()
     }

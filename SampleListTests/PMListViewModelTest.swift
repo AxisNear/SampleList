@@ -30,7 +30,7 @@ final class PMListViewModelTest: XCTestCase {
                                                scrollInfo: .empty(),
                                                refresh: .empty(),
                                                switchClick: .empty(),
-                                               favriateClick: .empty()))
+                                               favriateSwitch: .empty()))
 
         let observer = scheduler.createObserver([any PMCellDisplayable].self)
         let bag = DisposeBag()
@@ -55,7 +55,7 @@ final class PMListViewModelTest: XCTestCase {
                                                scrollInfo: .empty(),
                                                refresh: refresh,
                                                switchClick: .empty(),
-                                               favriateClick: .empty()))
+                                               favriateSwitch: .empty()))
 
         let observer = scheduler.createObserver([any PMCellDisplayable].self)
         let bag = DisposeBag()
@@ -86,7 +86,7 @@ final class PMListViewModelTest: XCTestCase {
                                                scrollInfo: offset,
                                                refresh: .empty(),
                                                switchClick: .empty(),
-                                               favriateClick: .empty()))
+                                               favriateSwitch: .empty()))
 
         let observer = scheduler.createObserver([any PMCellDisplayable].self)
         let bag = DisposeBag()
@@ -111,7 +111,7 @@ final class PMListViewModelTest: XCTestCase {
                                                scrollInfo: .empty(),
                                                refresh: refresh,
                                                switchClick: .empty(),
-                                               favriateClick: .empty()))
+                                               favriateSwitch: .empty()))
 
         let observer = scheduler.createObserver(Bool.self)
         let bag = DisposeBag()
@@ -142,7 +142,7 @@ final class PMListViewModelTest: XCTestCase {
                                                scrollInfo: .empty(),
                                                refresh: refresh,
                                                switchClick: .empty(),
-                                               favriateClick: .empty()))
+                                               favriateSwitch: .empty()))
         fakeUseCase.sendError = true
         scheduler.scheduleAt(2, action: { [weak fakeUseCase] in
             fakeUseCase?.sendError = false
@@ -191,4 +191,5 @@ private class FakeListUseCase: PokemonListUseCaseProtocol {
         }
         return .just(.init())
     }
+    func toggleFavoriteMode() -> Observable<[PokemonList.PokemonSource]> { .empty() }
 }

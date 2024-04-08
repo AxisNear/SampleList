@@ -8,8 +8,10 @@ class PMListVC: UIViewController {
     private let viewModel: PMListVM
     private let bag: DisposeBag = .init()
     private let didScroll: PublishRelay<PMListVM.ScrollInfo> = .init()
+    private let barItemClick: PublishRelay<Void> = .init()
     private var dataDisplay: [PMCellDisplayable] = .init()
     private let refreshControl: UIRefreshControl = .init()
+
     private let indicatorView: UIActivityIndicatorView = {
         let _indicator = UIActivityIndicatorView(style: .large)
         _indicator.color = .lightGray
@@ -45,6 +47,12 @@ class PMListVC: UIViewController {
         }
         setupUI()
         bindViewModel()
+        let barItem: UIBarButtonItem = .init(systemItem: .compose,
+                                             primaryAction: .init(handler: { [weak barItemClick] _ in
+                                                 barItemClick?.accept(())
+                                             }))
+
+        navigationItem.setRightBarButtonItems([barItem], animated: false)
     }
 
     private func setupUI() {
@@ -66,7 +74,7 @@ class PMListVC: UIViewController {
                 scrollInfo: didScroll.asDriver(onErrorJustReturn: .zero()),
                 refresh: refreshControl.rx.controlEvent(.valueChanged).asDriver(),
                 switchClick: .empty(),
-                favriateClick: .empty())
+                favriateSwitch: barItemClick.asDriver(onErrorDriveWith: .empty()))
         )
 
         output.dataChanged
