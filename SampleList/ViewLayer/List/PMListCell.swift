@@ -147,7 +147,8 @@ class PMListCell: UICollectionViewCell {
     override func preferredLayoutAttributesFitting(_ layoutAttributes: UICollectionViewLayoutAttributes) -> UICollectionViewLayoutAttributes {
         let preferred = super.preferredLayoutAttributesFitting(layoutAttributes)
         var modifyRect = preferred.frame
-        modifyRect.size = contentView.systemLayoutSizeFitting(CGSize(width: UIScreen.main.bounds.width, height: 80),
+
+        modifyRect.size = contentView.systemLayoutSizeFitting(CGSize(width: window?.bounds.width ?? 300, height: 80),
                                                               withHorizontalFittingPriority: .defaultHigh,
                                                               verticalFittingPriority: .defaultHigh)
         preferred.frame = modifyRect
