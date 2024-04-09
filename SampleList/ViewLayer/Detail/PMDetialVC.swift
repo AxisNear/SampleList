@@ -91,12 +91,6 @@ class PMDetialVC: UIViewController {
 
     private func setupUI() {
         view.backgroundColor = .white
-        view.addSubview(indicatorView)
-
-        indicatorView.snp.makeConstraints({
-            $0.center.equalToSuperview()
-        })
-
         let pokemonContenView = UIStackView(frame: .zero)
         pokemonContenView.axis = .vertical
         pokemonContenView.distribution = .fillProportionally
@@ -120,6 +114,12 @@ class PMDetialVC: UIViewController {
         collectionview.snp.makeConstraints({
             $0.top.equalTo(pokemonContenView.snp.bottom)
             $0.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
+        })
+
+        view.addSubview(indicatorView)
+
+        indicatorView.snp.makeConstraints({
+            $0.center.equalToSuperview()
         })
     }
 
