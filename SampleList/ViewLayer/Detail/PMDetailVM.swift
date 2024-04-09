@@ -11,33 +11,45 @@ import RxSwift
 
 class PMDetailVM {
     private let name: String
-    private let favoritUseCase: DefaultFavoriteUseCase
+    private let favoriteUseCase: DefaultFavoriteUseCase
     private let infoUseCase: DefaultPMInfoUseCase
+    private let coordinator: PMDetialCoordinator
 
     struct Input {
         let viewAppear: Driver<Bool>
+        let favoriteClick: Driver<Void>
+        let showPokemon: Driver<IndexPath>
     }
 
     struct Output {
-        let pokemonInfo: Driver<PokemonInfo>
+        let pokemonInfo: Driver<PMInfoDisplayable>
         let description: Driver<String>
         let chain: Driver<[String]>
         let indicatorDisplay: Driver<Bool>
         let errorDisplay: Driver<ErrorDisplay?>
+        let isFavorite: Driver<Bool>
+        let config: Driver<Void>
     }
 
     init(name: String,
+         coordinator: PMDetialCoordinator,
          favoriteUseCase: DefaultFavoriteUseCase = .init(),
-         infoUseCase: DefaultPMInfoUseCase = .init()) {
+         infoUseCase: DefaultPMInfoUseCase = .init()
+    ) {
         self.name = name
-        self.favoritUseCase = favoriteUseCase
+        self.favoriteUseCase = favoriteUseCase
         self.infoUseCase = infoUseCase
+        self.coordinator = coordinator
     }
 
     func trasfrom(input: Input) -> Output {
         let indicatorOutput = PublishRelay<Bool>()
         let errorOutput = PublishRelay<Error?>()
-        let viewIsShowUp = input.viewAppear.filter({ $0 })
+
+        let viewIsShowUp = input.viewAppear
+            .filter({ $0 })
+            .mapToVoid()
+
         let fetchPokemonInfo = viewIsShowUp
             .flatMapLatest({ [weak self] _ -> Driver<PokemonInfo> in
                 guard let self else { return .empty() }
@@ -71,11 +83,36 @@ class PMDetailVM {
                 .asDriver(onErrorJustReturn: [])
         })
 
-        return .init(pokemonInfo: fetchPokemonInfo.compactMap({ $0 }),
+        let showPokemon = input.showPokemon
+            .withLatestFrom(evolutionChain, resultSelector: { indexPath, infos in
+                return infos[indexPath.row]
+            })
+            .do(onNext: { [weak self] name in
+                self?.coordinator.toOtherDetail(name: name)
+            })
+
+        let favoriteClick = input.favoriteClick
+            .flatMapLatest({ [weak favoriteUseCase, weak self] _ -> Driver<Void> in
+                guard let self, let favoriteUseCase else { return .empty() }
+                return favoriteUseCase.favoirteToggle(name: self.name)
+                    .trackIndicator(indicator: indicatorOutput)
+                    .asDriver(onErrorDriveWith: .empty())
+            })
+
+        let checkFavoritState = viewIsShowUp
+            .flatMapLatest({ [weak favoriteUseCase, weak self] _ -> Driver<Bool> in
+                guard let self, let favoriteUseCase else { return .empty() }
+                return favoriteUseCase.favoriteState(name: self.name)
+                    .asDriver(onErrorDriveWith: .empty())
+            })
+
+        return .init(pokemonInfo: fetchPokemonInfo.map(\.display),
                      description: description,
                      chain: evolutionChain,
                      indicatorDisplay: indicatorOutput.asDriver(onErrorJustReturn: false),
-                     errorDisplay: errorOutput.map({ $0?.covertToDisplayError() }).asDriver(onErrorJustReturn: nil)
+                     errorDisplay: errorOutput.map({ $0?.covertToDisplayError() }).asDriver(onErrorJustReturn: nil),
+                     isFavorite: .merge(checkFavoritState),
+                     config: .merge(showPokemon.mapToVoid(), favoriteClick)
         )
     }
 }

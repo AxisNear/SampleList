@@ -12,26 +12,16 @@ import UIKit
 
 class PMListCell: UICollectionViewCell {
     static let cellID = "PMListCell"
-    let nameLabel = UILabel()
-    let imageView = UIImageView()
-    let idLabel = UILabel()
-    let typeslabel = UILabel()
-    let viewModel: PMListCellVM = .init()
-    let bag = DisposeBag()
-    let sourceChanged: PublishRelay<String> = .init()
+    private let nameLabel = UILabel()
+    private let imageView = UIImageView()
+    private let idLabel = UILabel()
+    private let typeslabel = UILabel()
+    private let viewModel: PMListCellVM = .init()
+    private let bag = DisposeBag()
+    private let sourceChanged: PublishRelay<String> = .init()
     private var pokemonName: String = ""
-    let favorteBtn: UIButton = {
-        let btn = UIButton(type: .custom)
-        btn.setImage(UIImage(systemName: "star"), for: .normal)
-        btn.setImage(UIImage(systemName: "star.fill"), for: .selected)
-        return btn
-    }()
-    let indicator: UIActivityIndicatorView = {
-        let _indicator = UIActivityIndicatorView(style: .medium)
-        _indicator.hidesWhenStopped = true
-        _indicator.color = .gray
-        return _indicator
-    }()
+    private let favorteBtn: UIButton = UIFactory.createFavoriteBtn()
+    private let indicator: UIActivityIndicatorView = UIFactory.createIndicatorView()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -109,7 +99,7 @@ class PMListCell: UICollectionViewCell {
         let output = viewModel.trasfrom(input: .init(sourceChanged: sourceChanged.asDriver(onErrorJustReturn: ""),
                                                      favoriteClick: btnClick))
 
-        let prepareReuse: Driver<PokemonInfo?> = rx.methodInvoked(#selector(prepareForReuse))
+        let prepareReuse: Driver<PMInfoDisplayable?> = rx.methodInvoked(#selector(prepareForReuse))
             .asDriver(onErrorDriveWith: .empty())
             .map({ _ in return nil })
 
@@ -125,15 +115,19 @@ class PMListCell: UICollectionViewCell {
         output.isFavorite
             .drive(favorteBtn.rx.isSelected)
             .disposed(by: bag)
+
+        output.config
+            .drive()
+            .disposed(by: bag)
     }
 
-    private var infoDisplay: Binder<PokemonInfo?> {
+    private var infoDisplay: Binder<PMInfoDisplayable?> {
         return .init(self, binding: { _weakSelf, info in
             if let info {
-                _weakSelf.nameLabel.text = "name: " + info.name
-                _weakSelf.idLabel.text = "id: \(info.id)"
-                _weakSelf.typeslabel.text = "type: " + info.types.joined(separator: ", ")
-                _weakSelf.imageView.downLaodImageWith(url: info.thumbnail)
+                _weakSelf.nameLabel.text = info.nameTitle
+                _weakSelf.idLabel.text = info.idTitle
+                _weakSelf.typeslabel.text = info.typesTitle
+                _weakSelf.imageView.downLaodImageWith(url: info.imgurl)
             } else {
                 _weakSelf.nameLabel.text = ""
                 _weakSelf.idLabel.text = ""

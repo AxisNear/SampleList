@@ -18,9 +18,14 @@ class PMDetialCoordinator: CoordinatorProtocol {
     }
 
     func start(animate: Bool) {
-        let vm = PMDetailVM(name: pokemonName)
+        let vm = PMDetailVM(name: pokemonName, coordinator: self)
         let detilVC = PMDetialVC(vm: vm)
         nav?.pushViewController(detilVC, animated: animate)
+    }
+
+    func toOtherDetail(name: String) {
+        let coordinator = PMDetialCoordinator(nav: nav, name: name)
+        coordinator.start(animate: true)
     }
 
     deinit {

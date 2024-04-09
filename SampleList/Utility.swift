@@ -37,8 +37,8 @@ extension SharedSequence where SharingStrategy == DriverSharingStrategy {
 
 extension Reactive where Base: UIViewController {
     var isViewAppear: Driver<Bool> {
-        let source = methodInvoked(#selector(Base.viewDidAppear(_:))).map({ _ in true })
-        let source2 = methodInvoked(#selector(Base.viewDidDisappear(_:))).map({ _ in false })
+        let source = methodInvoked(#selector(Base.viewWillAppear(_:))).map({ _ in true })
+        let source2 = methodInvoked(#selector(Base.viewWillDisappear(_:))).map({ _ in false })
         return Observable<Bool>.merge(source, source2).asDriver(onErrorJustReturn: false)
     }
 }
@@ -92,5 +92,21 @@ extension UIView {
                 })
             })
         })
+    }
+}
+
+enum UIFactory {
+    static func createIndicatorView() -> UIActivityIndicatorView {
+        let _indicator = UIActivityIndicatorView(style: .large)
+        _indicator.color = .lightGray
+        _indicator.hidesWhenStopped = true
+        return _indicator
+    }
+
+    static func createFavoriteBtn() -> UIButton {
+        let btn = UIButton(type: .custom)
+        btn.setImage(UIImage(systemName: "star"), for: .normal)
+        btn.setImage(UIImage(systemName: "star.fill"), for: .selected)
+        return btn
     }
 }

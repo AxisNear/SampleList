@@ -119,11 +119,3 @@ class PMListVM {
         return pokemonSource
     }
 }
-
-protocol PMCellDisplayable {
-    var name: String { get }
-    var url: String { get }
-}
-
-// MARK: - PMCellDisplayable
-extension PokemonList.PokemonSource: PMCellDisplayable {}

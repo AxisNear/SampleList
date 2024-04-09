@@ -13,12 +13,7 @@ class PMListVC: UIViewController {
     private var dataDisplay: [PMCellDisplayable] = .init()
     private let refreshControl: UIRefreshControl = .init()
 
-    private let indicatorView: UIActivityIndicatorView = {
-        let _indicator = UIActivityIndicatorView(style: .large)
-        _indicator.color = .lightGray
-        _indicator.hidesWhenStopped = true
-        return _indicator
-    }()
+    private let indicatorView: UIActivityIndicatorView = UIFactory.createIndicatorView()
 
     private let collectionview: UICollectionView = {
         let layout = UICollectionViewFlowLayout()

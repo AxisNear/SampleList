@@ -15,14 +15,32 @@ class DefaultFavoriteUseCase {
         self.favoriteRepo = favoriteRepo
     }
 
-    func favoriteState(name: String) -> Bool {
-        return favoriteRepo.isFavorite(name: name)
+    func favoriteState(name: String) -> Observable<Bool> {
+        let notifi: Observable<Bool> = NotificationCenter.default.rx.notification(.favoriteChanged, object: nil)
+            .compactMap { notification in
+                guard let userInfo = notification.userInfo as? [String: Bool],
+                      let notifiName = userInfo.keys.first,
+                      let isFavorite = userInfo[name]
+                else {
+                    return nil
+                }
+                return name == notifiName ? isFavorite : nil
+            }
+        return notifi.startWith(favoriteRepo.isFavorite(name: name))
     }
 
-    func favoirteToggle(name: String) -> Observable<Bool> {
-        if favoriteState(name: name) {
-            return .just(favoriteRepo.deleteFavorte(name: name))
+    func favoirteToggle(name: String) -> Observable<Void> {
+        let isChanged: Bool
+        if favoriteRepo.isFavorite(name: name) {
+            isChanged = favoriteRepo.deleteFavorte(name: name)
+        } else {
+            isChanged = favoriteRepo.addFavotite(name: name)
         }
-        return .just(favoriteRepo.addFavotite(name: name))
+        NotificationCenter.default.post(name: .favoriteChanged, object: nil, userInfo: [name: isChanged])
+        return .just(())
     }
+}
+
+extension Notification.Name {
+    static let favoriteChanged = Notification.Name("FavoriteChanged")
 }

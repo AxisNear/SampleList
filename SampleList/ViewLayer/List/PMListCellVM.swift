@@ -16,9 +16,10 @@ class PMListCellVM {
     }
 
     struct Output {
-        let infoChanged: Driver<PokemonInfo?>
+        let infoChanged: Driver<PMInfoDisplayable?>
         let isFavorite: Driver<Bool>
         let indicator: Driver<Bool>
+        let config: Driver<Void>
     }
 
     let useCase: DefaultPMInfoUseCase
@@ -41,8 +42,8 @@ class PMListCellVM {
                     .asDriver(onErrorJustReturn: nil)
             })
 
-        let favoriteEvnet = input.favoriteClick
-            .flatMapLatest({ [weak favroiteUseCase] name -> Driver<Bool> in
+        let favoriteClick = input.favoriteClick
+            .flatMapLatest({ [weak favroiteUseCase] name -> Driver<Void> in
                 guard let favroiteUseCase else { return .empty() }
                 return favroiteUseCase.favoirteToggle(name: name)
                     .trackIndicator(indicator: indicatorTracker)
@@ -50,12 +51,15 @@ class PMListCellVM {
             })
 
         let checkFavoritState = input.sourceChanged
-            .map({ [weak favroiteUseCase] name -> Bool in
-                guard let favroiteUseCase else { return false }
-                return favroiteUseCase.favoriteState(name: name)
+            .flatMapLatest({ [weak favroiteUseCase] name -> Driver<Bool> in
+                guard let favroiteUseCase else { return .empty() }
+                return favroiteUseCase.favoriteState(name: name)                    
+                    .asDriver(onErrorDriveWith: .empty())
             })
-        return .init(infoChanged: fetchdata,
-                     isFavorite: .merge(favoriteEvnet, checkFavoritState),
-                     indicator: indicatorTracker.asDriver(onErrorJustReturn: false))
+        return .init(infoChanged: fetchdata.map({ $0?.display }),
+                     isFavorite: checkFavoritState.debug(),
+                     indicator: indicatorTracker.asDriver(onErrorJustReturn: false),
+                     config: favoriteClick
+        )
     }
 }
