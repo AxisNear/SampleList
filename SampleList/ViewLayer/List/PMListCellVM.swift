@@ -21,10 +21,11 @@ class PMListCellVM {
         let indicator: Driver<Bool>
     }
 
-    let useCase: DefaultPMCellUseCase
-
-    init(useCase: DefaultPMCellUseCase = DefaultPMCellUseCase()) {
+    let useCase: DefaultPMInfoUseCase
+    let favroiteUseCase: DefaultFavoriteUseCase
+    init(useCase: DefaultPMInfoUseCase = DefaultPMInfoUseCase(), favortieUseCase: DefaultFavoriteUseCase = DefaultFavoriteUseCase()) {
         self.useCase = useCase
+        self.favroiteUseCase = favortieUseCase
     }
 
     func trasfrom(input: Input) -> Output {
@@ -39,17 +40,17 @@ class PMListCellVM {
             })
 
         let favoriteEvnet = input.favoriteClick
-            .flatMapLatest({ [weak useCase] name -> Driver<Bool> in
-                guard let useCase else { return .empty() }
-                return useCase.favoirteToggle(name: name)
+            .flatMapLatest({ [weak favroiteUseCase] name -> Driver<Bool> in
+                guard let favroiteUseCase else { return .empty() }
+                return favroiteUseCase.favoirteToggle(name: name)
                     .trackIndicator(indicator: indicatorTracker)
                     .asDriver(onErrorDriveWith: .empty())
             })
 
         let checkFavoritState = input.sourceChanged
-            .map({ [weak useCase] name -> Bool in
-                guard let useCase else { return false }
-                return useCase.favoriteState(name: name)
+            .map({ [weak favroiteUseCase] name -> Bool in
+                guard let favroiteUseCase else { return false }
+                return favroiteUseCase.favoriteState(name: name)
             })
         return .init(infoChanged: fetchdata,
                      isFavorite: .merge(favoriteEvnet, checkFavoritState),

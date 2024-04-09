@@ -28,6 +28,7 @@ class PMListVM {
         let refresh: Driver<Void>
         let switchClick: Driver<Void>
         let favriateSwitch: Driver<Void>
+        let itemSelected: Driver<IndexPath>
     }
 
     struct Output {
@@ -35,14 +36,17 @@ class PMListVM {
         let indicator: Driver<Bool>
         let errorDisplay: Driver<ErrorDisplay?>
         let layoutSwitch: Driver<ListLayout>
+        let config: Driver<Void>
     }
 
-    let useCase: PokemonListUseCaseProtocol
-    let loadmoreOffset: CGFloat
+    private let useCase: PokemonListUseCaseProtocol
+    private let loadmoreOffset: CGFloat
+    private var coordinator: PMListCoordinator
 
-    init(useCase: PokemonListUseCaseProtocol = DefaultPMListUseCase(), loadMoreOffset: CGFloat = 100) {
+    init(coordinator: PMListCoordinator, useCase: PokemonListUseCaseProtocol = DefaultPMListUseCase(), loadMoreOffset: CGFloat = 100) {
         self.useCase = useCase
         self.loadmoreOffset = loadMoreOffset
+        self.coordinator = coordinator
     }
 
     func transfrom(input: Input) -> Output {
@@ -91,12 +95,21 @@ class PMListVM {
                     .asDriver(onErrorJustReturn: [])
             })
         let dataChanged = Driver.merge(fetchWhenDataEmpty, refresh, loadMore, favoriteSwitch)
-            .map(transDataToDisplayModel(pokemonSource:))
 
-        return .init(dataChanged: dataChanged,
+        let showDetial = input.itemSelected
+            .withLatestFrom(dataChanged, resultSelector: { _indexPath, sources in
+                return sources[_indexPath.row]
+            })
+            .do(onNext: { [weak coordinator] item in
+                coordinator?.showDetial(name: item.name)
+            })
+            .mapToVoid()
+
+        return .init(dataChanged: dataChanged.map(transDataToDisplayModel(pokemonSource:)),
                      indicator: indicatorOuput.asDriver(onErrorJustReturn: false),
                      errorDisplay: errorOutput.map({ $0?.covertToDisplayError() }).asDriver(onErrorJustReturn: nil),
-                     layoutSwitch: .empty()
+                     layoutSwitch: .empty(),
+                     config: .merge(showDetial)
         )
     }
 

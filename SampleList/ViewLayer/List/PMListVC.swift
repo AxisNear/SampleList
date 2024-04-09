@@ -9,6 +9,8 @@ class PMListVC: UIViewController {
     private let bag: DisposeBag = .init()
     private let didScroll: PublishRelay<PMListVM.ScrollInfo> = .init()
     private let barItemClick: PublishRelay<Void> = .init()
+    private let itemSelected: PublishRelay<IndexPath> = .init()
+
     private var dataDisplay: [PMCellDisplayable] = .init()
     private let refreshControl: UIRefreshControl = .init()
 
@@ -35,7 +37,7 @@ class PMListVC: UIViewController {
     }
 
     required init?(coder: NSCoder) {
-        self.viewModel = PMListVM()
+        self.viewModel = PMListVM(coordinator: .init(nav: nil))
         super.init(coder: coder)
     }
 
@@ -74,7 +76,8 @@ class PMListVC: UIViewController {
                 scrollInfo: didScroll.asDriver(onErrorJustReturn: .zero()),
                 refresh: refreshControl.rx.controlEvent(.valueChanged).asDriver(),
                 switchClick: .empty(),
-                favriateSwitch: barItemClick.asDriver(onErrorDriveWith: .empty()))
+                favriateSwitch: barItemClick.asDriver(onErrorDriveWith: .empty()),
+                itemSelected: itemSelected.asDriver(onErrorDriveWith: .empty()))
         )
 
         output.dataChanged
@@ -87,6 +90,10 @@ class PMListVC: UIViewController {
 
         output.errorDisplay
             .drive(view.showErrorToast)
+            .disposed(by: bag)
+
+        output.config
+            .drive()
             .disposed(by: bag)
     }
 
@@ -116,6 +123,9 @@ extension PMListVC: UICollectionViewDelegate {
         didScroll.accept(.init(offst: scrollView.contentOffset,
                                contentSize: scrollView.contentSize,
                                boundSize: scrollView.bounds.size))
+    }
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        itemSelected.accept(indexPath)
     }
 }
 

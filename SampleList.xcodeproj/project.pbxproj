@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		28F6B0FBDD86300ACFFF080A /* Pods_SampleList_SampleListUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A5B851FDD341D76249FF4340 /* Pods_SampleList_SampleListUITests.framework */; };
+		4027ADE52BC563C500960048 /* CoordinatorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4027ADE42BC563C500960048 /* CoordinatorProtocol.swift */; };
+		4027ADE72BC5643900960048 /* PMListCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4027ADE62BC5643900960048 /* PMListCoordinator.swift */; };
+		4027ADEB2BC5735500960048 /* PMDetialCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4027ADEA2BC5735500960048 /* PMDetialCoordinator.swift */; };
+		4027ADED2BC575E200960048 /* DefaultFavoriteUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4027ADEC2BC575E200960048 /* DefaultFavoriteUseCase.swift */; };
 		40AB8EC02BBFE51D00C6192D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40AB8EBF2BBFE51D00C6192D /* AppDelegate.swift */; };
 		40AB8EC22BBFE51D00C6192D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40AB8EC12BBFE51D00C6192D /* SceneDelegate.swift */; };
 		40AB8EC92BBFE51F00C6192D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 40AB8EC82BBFE51F00C6192D /* Assets.xcassets */; };
@@ -25,8 +29,10 @@
 		40AB8F082BC2905C00C6192D /* PMService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40AB8F072BC2905C00C6192D /* PMService.swift */; };
 		40AB8F0B2BC3205100C6192D /* PMListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40AB8F0A2BC3205100C6192D /* PMListCell.swift */; };
 		40AB8F0D2BC3502200C6192D /* PMListCellVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40AB8F0C2BC3502200C6192D /* PMListCellVM.swift */; };
-		40AB8F102BC35C6B00C6192D /* DefaultPMCellUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40AB8F0F2BC35C6B00C6192D /* DefaultPMCellUseCase.swift */; };
+		40AB8F102BC35C6B00C6192D /* DefaultPMInfoUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40AB8F0F2BC35C6B00C6192D /* DefaultPMInfoUseCase.swift */; };
 		40AB8F122BC35CA000C6192D /* FavoriteRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40AB8F112BC35CA000C6192D /* FavoriteRepo.swift */; };
+		40C37C1D2BC4B1E8008601E7 /* PMDetialVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C37C1C2BC4B1E8008601E7 /* PMDetialVC.swift */; };
+		40C37C1F2BC4B1F4008601E7 /* PMDetailVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C37C1E2BC4B1F4008601E7 /* PMDetailVM.swift */; };
 		A058966AF2493A8DD3760EF7 /* Pods_SampleList.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F88C4F48FF66B2343DA5A9C /* Pods_SampleList.framework */; };
 		D384CAB7BF3C4F9B9FCC2CD9 /* Pods_SampleListTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CB14FB03CC8FABE92FF3CDA /* Pods_SampleListTests.framework */; };
 /* End PBXBuildFile section */
@@ -51,6 +57,10 @@
 /* Begin PBXFileReference section */
 		2A354E1EC27D384EB8C65E5D /* Pods-SampleList-SampleListUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SampleList-SampleListUITests.release.xcconfig"; path = "Target Support Files/Pods-SampleList-SampleListUITests/Pods-SampleList-SampleListUITests.release.xcconfig"; sourceTree = "<group>"; };
 		3F88C4F48FF66B2343DA5A9C /* Pods_SampleList.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SampleList.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4027ADE42BC563C500960048 /* CoordinatorProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinatorProtocol.swift; sourceTree = "<group>"; };
+		4027ADE62BC5643900960048 /* PMListCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PMListCoordinator.swift; sourceTree = "<group>"; };
+		4027ADEA2BC5735500960048 /* PMDetialCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PMDetialCoordinator.swift; sourceTree = "<group>"; };
+		4027ADEC2BC575E200960048 /* DefaultFavoriteUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultFavoriteUseCase.swift; sourceTree = "<group>"; };
 		40AB8EBC2BBFE51D00C6192D /* SampleList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SampleList.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		40AB8EBF2BBFE51D00C6192D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		40AB8EC12BBFE51D00C6192D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -72,8 +82,10 @@
 		40AB8F072BC2905C00C6192D /* PMService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PMService.swift; sourceTree = "<group>"; };
 		40AB8F0A2BC3205100C6192D /* PMListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PMListCell.swift; sourceTree = "<group>"; };
 		40AB8F0C2BC3502200C6192D /* PMListCellVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PMListCellVM.swift; sourceTree = "<group>"; };
-		40AB8F0F2BC35C6B00C6192D /* DefaultPMCellUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultPMCellUseCase.swift; sourceTree = "<group>"; };
+		40AB8F0F2BC35C6B00C6192D /* DefaultPMInfoUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultPMInfoUseCase.swift; sourceTree = "<group>"; };
 		40AB8F112BC35CA000C6192D /* FavoriteRepo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteRepo.swift; sourceTree = "<group>"; };
+		40C37C1C2BC4B1E8008601E7 /* PMDetialVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PMDetialVC.swift; sourceTree = "<group>"; };
+		40C37C1E2BC4B1F4008601E7 /* PMDetailVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PMDetailVM.swift; sourceTree = "<group>"; };
 		4CB14FB03CC8FABE92FF3CDA /* Pods_SampleListTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SampleListTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		62BD05E5143C5D8DB5722258 /* Pods-SampleListTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SampleListTests.release.xcconfig"; path = "Target Support Files/Pods-SampleListTests/Pods-SampleListTests.release.xcconfig"; sourceTree = "<group>"; };
 		A5B851FDD341D76249FF4340 /* Pods_SampleList_SampleListUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SampleList_SampleListUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -111,6 +123,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4027ADE32BC563A000960048 /* Coordinator */ = {
+			isa = PBXGroup;
+			children = (
+				4027ADE42BC563C500960048 /* CoordinatorProtocol.swift */,
+				4027ADE62BC5643900960048 /* PMListCoordinator.swift */,
+				4027ADEA2BC5735500960048 /* PMDetialCoordinator.swift */,
+			);
+			path = Coordinator;
+			sourceTree = "<group>";
+		};
 		40AB8EB32BBFE51D00C6192D = {
 			isa = PBXGroup;
 			children = (
@@ -139,6 +161,7 @@
 				40AB8EBF2BBFE51D00C6192D /* AppDelegate.swift */,
 				40AB8EC12BBFE51D00C6192D /* SceneDelegate.swift */,
 				40AB8F032BC1272E00C6192D /* Utility.swift */,
+				4027ADE32BC563A000960048 /* Coordinator */,
 				40AB8EF12BC0A78500C6192D /* ModelLayer */,
 				40AB8EFE2BC11E0300C6192D /* ViewLayer */,
 				40AB8EC82BBFE51F00C6192D /* Assets.xcassets */,
@@ -174,7 +197,8 @@
 				40AB8EF22BC0A7A800C6192D /* PMRemoteRepo.swift */,
 				40AB8F112BC35CA000C6192D /* FavoriteRepo.swift */,
 				40AB8EF92BC0B1E200C6192D /* DefaultPMListUseCase.swift */,
-				40AB8F0F2BC35C6B00C6192D /* DefaultPMCellUseCase.swift */,
+				4027ADEC2BC575E200960048 /* DefaultFavoriteUseCase.swift */,
+				40AB8F0F2BC35C6B00C6192D /* DefaultPMInfoUseCase.swift */,
 			);
 			path = ModelLayer;
 			sourceTree = "<group>";
@@ -183,6 +207,7 @@
 			isa = PBXGroup;
 			children = (
 				40AB8F092BC3200D00C6192D /* List */,
+				40C37C1B2BC4B1CB008601E7 /* Detail */,
 			);
 			path = ViewLayer;
 			sourceTree = "<group>";
@@ -196,6 +221,15 @@
 				40AB8F0C2BC3502200C6192D /* PMListCellVM.swift */,
 			);
 			path = List;
+			sourceTree = "<group>";
+		};
+		40C37C1B2BC4B1CB008601E7 /* Detail */ = {
+			isa = PBXGroup;
+			children = (
+				40C37C1C2BC4B1E8008601E7 /* PMDetialVC.swift */,
+				40C37C1E2BC4B1F4008601E7 /* PMDetailVM.swift */,
+			);
+			path = Detail;
 			sourceTree = "<group>";
 		};
 		B51689DD0C04C0032EDB5DD7 /* Pods */ = {
@@ -497,13 +531,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				40AB8F102BC35C6B00C6192D /* DefaultPMCellUseCase.swift in Sources */,
+				4027ADE52BC563C500960048 /* CoordinatorProtocol.swift in Sources */,
+				4027ADE72BC5643900960048 /* PMListCoordinator.swift in Sources */,
+				40AB8F102BC35C6B00C6192D /* DefaultPMInfoUseCase.swift in Sources */,
 				40AB8F082BC2905C00C6192D /* PMService.swift in Sources */,
+				4027ADEB2BC5735500960048 /* PMDetialCoordinator.swift in Sources */,
+				40C37C1D2BC4B1E8008601E7 /* PMDetialVC.swift in Sources */,
 				40AB8EC02BBFE51D00C6192D /* AppDelegate.swift in Sources */,
+				4027ADED2BC575E200960048 /* DefaultFavoriteUseCase.swift in Sources */,
 				40AB8F122BC35CA000C6192D /* FavoriteRepo.swift in Sources */,
 				40AB8F042BC1272E00C6192D /* Utility.swift in Sources */,
 				40AB8EC22BBFE51D00C6192D /* SceneDelegate.swift in Sources */,
 				40AB8EF52BC0A92500C6192D /* PokemonModel.swift in Sources */,
+				40C37C1F2BC4B1F4008601E7 /* PMDetailVM.swift in Sources */,
 				40AB8F0D2BC3502200C6192D /* PMListCellVM.swift in Sources */,
 				40AB8F022BC1224900C6192D /* PMListVC.swift in Sources */,
 				40AB8F002BC11E5B00C6192D /* PMListVM.swift in Sources */,
