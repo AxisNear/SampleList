@@ -42,6 +42,10 @@ class PMDetailVM {
         self.coordinator = coordinator
     }
 
+    deinit {
+        print("PMDetailVM deinit")
+    }
+
     func trasfrom(input: Input) -> Output {
         let indicatorOutput = PublishRelay<Bool>()
         let errorOutput = PublishRelay<Error?>()

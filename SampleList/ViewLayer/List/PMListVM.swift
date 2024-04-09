@@ -51,6 +51,10 @@ class PMListVM {
         self.coordinator = coordinator
     }
 
+    deinit {
+        print("PMListVM deinit")
+    }
+
     func transfrom(input: Input) -> Output {
         let errorOutput: PublishRelay<Error?> = .init()
         let indicatorOuput: PublishRelay<Bool> = .init()

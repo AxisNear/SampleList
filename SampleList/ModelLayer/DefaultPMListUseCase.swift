@@ -25,6 +25,10 @@ class DefaultPMListUseCase: PokemonListUseCaseProtocol {
         self.favortieRepo = favorieRepo
     }
 
+    deinit {
+        print("DefaultPMListUseCase deinit")
+    }
+
     var canLoadMore: Bool {
         return nextUrl?.isEmpty == false
     }

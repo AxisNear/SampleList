@@ -146,6 +146,10 @@ class PMDetialVC: UIViewController {
             _self.collectionview.reloadData()
         })
     }
+
+    deinit {
+        print("PMDetialVC deinit")
+    }
 }
 
 // MARK: UICollectionViewDelegate

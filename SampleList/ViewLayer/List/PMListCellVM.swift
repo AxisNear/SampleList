@@ -57,7 +57,7 @@ class PMListCellVM {
                     .asDriver(onErrorDriveWith: .empty())
             })
         return .init(infoChanged: fetchdata.map({ $0?.display }),
-                     isFavorite: checkFavoritState.debug(),
+                     isFavorite: checkFavoritState,
                      indicator: indicatorTracker.asDriver(onErrorJustReturn: false),
                      config: favoriteClick
         )
