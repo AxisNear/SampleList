@@ -7,12 +7,15 @@ import Foundation
 
 protocol PMCellDisplayable {
     var name: String { get }
-    var url: String { get }
 }
 
 // MARK: - PMCellDisplayable
 extension PokemonList.PokemonSource: PMCellDisplayable {}
-
+extension EvolutionChain.Species: PMCellDisplayable {
+    var display: PMCellDisplayable {
+        return self
+    }
+}
 
 protocol PMInfoDisplayable {
     var nameTitle: String { get }

@@ -20,8 +20,19 @@ class PMDetialVC: UIViewController {
     private let idLabel = UILabel()
     private let typeslabel = UILabel()
     private let favorteBtn: UIButton = UIFactory.createFavoriteBtn()
-    private let indexClick: PublishRelay<IndexPath> = .init()
+    private let itemSelected: PublishRelay<IndexPath> = .init()
     private let descriptionlabel = UILabel()
+    private let collectionview: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.estimatedItemSize = .init(width: 400, height: 80)
+        layout.scrollDirection = .vertical
+        let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collection.register(PMListCell.self, forCellWithReuseIdentifier: PMListCell.cellID)
+        collection.alwaysBounceVertical = true
+        return collection
+    }()
+
+    private var dataDisplay: [PMCellDisplayable] = .init()
 
     init(vm: PMDetailVM) {
         self.vm = vm
@@ -39,20 +50,22 @@ class PMDetialVC: UIViewController {
         bindEvnet()
         let barItem: UIBarButtonItem = .init(customView: favorteBtn)
         navigationItem.setRightBarButtonItems([barItem], animated: false)
+        collectionview.delegate = self
+        collectionview.dataSource = self
     }
 
     private func bindEvnet() {
         let output = vm.trasfrom(input: .init(
             viewAppear: rx.isViewAppear,
             favoriteClick: favorteBtn.rx.controlEvent(.touchUpInside).asDriver(),
-            showPokemon: indexClick.asDriver(onErrorDriveWith: .empty())
+            showPokemon: itemSelected.asDriver(onErrorDriveWith: .empty())
         ))
         output.description
             .drive(desDisplay)
             .disposed(by: bag)
 
         output.chain
-            .drive()
+            .drive(chainDisplay)
             .disposed(by: bag)
 
         output.pokemonInfo
@@ -102,6 +115,12 @@ class PMDetialVC: UIViewController {
             $0.top.equalTo(view.safeAreaLayoutGuide)
             $0.leading.trailing.equalToSuperview().inset(8)
         })
+
+        view.addSubview(collectionview)
+        collectionview.snp.makeConstraints({
+            $0.top.equalTo(pokemonContenView.snp.bottom)
+            $0.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
+        })
     }
 
     private var infoDisplay: Binder<PMInfoDisplayable> {
@@ -120,4 +139,32 @@ class PMDetialVC: UIViewController {
         })
     }
 
+    private var chainDisplay: Binder<[PMCellDisplayable]> {
+        return .init(self, binding: { _self, info in
+            _self.dataDisplay = info
+            _self.view.layoutIfNeeded()
+            _self.collectionview.reloadData()
+        })
+    }
+}
+
+// MARK: UICollectionViewDelegate
+extension PMDetialVC: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        itemSelected.accept(indexPath)
+    }
+}
+
+// MARK: UICollectionViewDataSource
+extension PMDetialVC: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return dataDisplay.count
+    }
+
+    func collectionView(_ collectionView: UICollectionView,
+                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PMListCell.cellID, for: indexPath)
+        (cell as? PMListCell)?.config(with: dataDisplay[indexPath.row])
+        return cell
+    }
 }

@@ -24,7 +24,7 @@ class PMDetailVM {
     struct Output {
         let pokemonInfo: Driver<PMInfoDisplayable>
         let description: Driver<String>
-        let chain: Driver<[String]>
+        let chain: Driver<[PMCellDisplayable]>
         let indicatorDisplay: Driver<Bool>
         let errorDisplay: Driver<ErrorDisplay?>
         let isFavorite: Driver<Bool>
@@ -74,10 +74,10 @@ class PMDetailVM {
             return info.getPreferredFromDesctiption()
         })
 
-        let evolutionChain = fetchSpecies.flatMapLatest({ [weak self] info -> Driver<[String]> in
+        let evolutionChain = fetchSpecies.flatMapLatest({ [weak self] info -> Driver<[EvolutionChain.Species]> in
             guard let self, let evolutionUrl = info?.evolutionChain?.url else { return .just([]) }
             return self.infoUseCase.fetchEvolutionChain(url: evolutionUrl)
-                .map({ $0.flatMapChain().map(\.name) })
+                .map({ $0.flatMapChain() })
                 .trackIndicator(indicator: indicatorOutput)
                 .trackError(errorRelay: errorOutput)
                 .asDriver(onErrorJustReturn: [])
@@ -85,7 +85,7 @@ class PMDetailVM {
 
         let showPokemon = input.showPokemon
             .withLatestFrom(evolutionChain, resultSelector: { indexPath, infos in
-                return infos[indexPath.row]
+                return infos[indexPath.row].name
             })
             .do(onNext: { [weak self] name in
                 self?.coordinator.toOtherDetail(name: name)
@@ -108,7 +108,7 @@ class PMDetailVM {
 
         return .init(pokemonInfo: fetchPokemonInfo.map(\.display),
                      description: description,
-                     chain: evolutionChain,
+                     chain: evolutionChain.map({ $0.map(\.display) }),
                      indicatorDisplay: indicatorOutput.asDriver(onErrorJustReturn: false),
                      errorDisplay: errorOutput.map({ $0?.covertToDisplayError() }).asDriver(onErrorJustReturn: nil),
                      isFavorite: .merge(checkFavoritState),
