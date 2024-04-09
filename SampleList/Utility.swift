@@ -1,10 +1,3 @@
-//
-//  Utility.swift
-//  SampleList
-//
-//  Created by chiayu Yen on 2024/4/6.
-//
-
 import Foundation
 import Kingfisher
 import RxCocoa
@@ -30,6 +23,10 @@ extension ObservableType {
             indicator?.accept(false)
         })
     }
+
+    func mapToOptional() -> Observable<Element?> {
+        return map({ $0 })
+    }
 }
 
 extension SharedSequence where SharingStrategy == DriverSharingStrategy {
@@ -40,8 +37,8 @@ extension SharedSequence where SharingStrategy == DriverSharingStrategy {
 
 extension Reactive where Base: UIViewController {
     var isViewAppear: Driver<Bool> {
-        let source = methodInvoked(#selector(Base.viewDidAppear(_:))).map({ _ in true })
-        let source2 = methodInvoked(#selector(Base.viewDidDisappear(_:))).map({ _ in false })
+        let source = methodInvoked(#selector(Base.viewWillAppear(_:))).map({ _ in true })
+        let source2 = methodInvoked(#selector(Base.viewWillDisappear(_:))).map({ _ in false })
         return Observable<Bool>.merge(source, source2).asDriver(onErrorJustReturn: false)
     }
 }
@@ -90,10 +87,26 @@ extension UIView {
             }, completion: { _ in
                 UIView.animate(withDuration: 0.3, delay: 1, animations: {
                     toastLabel.alpha = 0
-                },completion: { _ in
+                }, completion: { _ in
                     toastLabel.removeFromSuperview()
                 })
             })
         })
+    }
+}
+
+enum UIFactory {
+    static func createIndicatorView() -> UIActivityIndicatorView {
+        let _indicator = UIActivityIndicatorView(style: .large)
+        _indicator.color = .lightGray
+        _indicator.hidesWhenStopped = true
+        return _indicator
+    }
+
+    static func createFavoriteBtn() -> UIButton {
+        let btn = UIButton(type: .custom)
+        btn.setImage(UIImage(systemName: "star"), for: .normal)
+        btn.setImage(UIImage(systemName: "star.fill"), for: .selected)
+        return btn
     }
 }

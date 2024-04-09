@@ -95,6 +95,14 @@ final class PMListUseCaseTest: XCTestCase {
 }
 
 private class FakeRepo: PMRemoteRepoProtocol {
+    func fetchSpecies(name: String) -> RxSwift.Observable<SampleList.PokemonSpecies> {
+        .empty()
+    }
+    
+    func fetchEvolutionChain(url: String) -> RxSwift.Observable<SampleList.PokemonEvolutionChain> {
+        .empty()
+    }
+    
     static var fakeData: [PokemonList.PokemonSource] = [.init(name: "", url: ""), .init(name: "", url: "")]
     var sendError: Bool = false
     func fetchPokemonList(url: String) -> Observable<PokemonList> {

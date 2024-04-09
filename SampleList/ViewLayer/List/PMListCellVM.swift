@@ -16,15 +16,19 @@ class PMListCellVM {
     }
 
     struct Output {
-        let infoChanged: Driver<PokemonInfo?>
+        let infoChanged: Driver<PMInfoDisplayable?>
         let isFavorite: Driver<Bool>
         let indicator: Driver<Bool>
+        let config: Driver<Void>
     }
 
-    let useCase: DefaultPMCellUseCase
+    let useCase: DefaultPMInfoUseCase
+    let favroiteUseCase: DefaultFavoriteUseCase
 
-    init(useCase: DefaultPMCellUseCase = DefaultPMCellUseCase()) {
+    init(useCase: DefaultPMInfoUseCase = DefaultPMInfoUseCase(),
+         favortieUseCase: DefaultFavoriteUseCase = DefaultFavoriteUseCase()) {
         self.useCase = useCase
+        self.favroiteUseCase = favortieUseCase
     }
 
     func trasfrom(input: Input) -> Output {
@@ -33,26 +37,29 @@ class PMListCellVM {
             .flatMapLatest({ [weak useCase] name -> Driver<PokemonInfo?> in
                 guard let useCase else { return .empty() }
                 return useCase.fetchInfoWith(name: name)
+                    .mapToOptional()
                     .trackIndicator(indicator: indicatorTracker)
-                    .map({ info -> PokemonInfo? in return info })
                     .asDriver(onErrorJustReturn: nil)
             })
 
-        let favoriteEvnet = input.favoriteClick
-            .flatMapLatest({ [weak useCase] name -> Driver<Bool> in
-                guard let useCase else { return .empty() }
-                return useCase.favoirteToggle(name: name)
+        let favoriteClick = input.favoriteClick
+            .flatMapLatest({ [weak favroiteUseCase] name -> Driver<Void> in
+                guard let favroiteUseCase else { return .empty() }
+                return favroiteUseCase.favoirteToggle(name: name)
                     .trackIndicator(indicator: indicatorTracker)
                     .asDriver(onErrorDriveWith: .empty())
             })
 
         let checkFavoritState = input.sourceChanged
-            .map({ [weak useCase] name -> Bool in
-                guard let useCase else { return false }
-                return useCase.favoriteState(name: name)
+            .flatMapLatest({ [weak favroiteUseCase] name -> Driver<Bool> in
+                guard let favroiteUseCase else { return .empty() }
+                return favroiteUseCase.favoriteState(name: name)
+                    .asDriver(onErrorDriveWith: .empty())
             })
-        return .init(infoChanged: fetchdata,
-                     isFavorite: .merge(favoriteEvnet, checkFavoritState),
-                     indicator: indicatorTracker.asDriver(onErrorJustReturn: false))
+        return .init(infoChanged: fetchdata.map({ $0?.display }),
+                     isFavorite: checkFavoritState.debug(),
+                     indicator: indicatorTracker.asDriver(onErrorJustReturn: false),
+                     config: favoriteClick
+        )
     }
 }

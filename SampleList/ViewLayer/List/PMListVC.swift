@@ -1,4 +1,3 @@
-
 import RxCocoa
 import RxSwift
 import SnapKit
@@ -9,15 +8,12 @@ class PMListVC: UIViewController {
     private let bag: DisposeBag = .init()
     private let didScroll: PublishRelay<PMListVM.ScrollInfo> = .init()
     private let barItemClick: PublishRelay<Void> = .init()
+    private let itemSelected: PublishRelay<IndexPath> = .init()
+
     private var dataDisplay: [PMCellDisplayable] = .init()
     private let refreshControl: UIRefreshControl = .init()
 
-    private let indicatorView: UIActivityIndicatorView = {
-        let _indicator = UIActivityIndicatorView(style: .large)
-        _indicator.color = .lightGray
-        _indicator.hidesWhenStopped = true
-        return _indicator
-    }()
+    private let indicatorView: UIActivityIndicatorView = UIFactory.createIndicatorView()
 
     private let collectionview: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -35,7 +31,7 @@ class PMListVC: UIViewController {
     }
 
     required init?(coder: NSCoder) {
-        self.viewModel = PMListVM()
+        self.viewModel = PMListVM(coordinator: .init(nav: nil))
         super.init(coder: coder)
     }
 
@@ -74,7 +70,8 @@ class PMListVC: UIViewController {
                 scrollInfo: didScroll.asDriver(onErrorJustReturn: .zero()),
                 refresh: refreshControl.rx.controlEvent(.valueChanged).asDriver(),
                 switchClick: .empty(),
-                favriateSwitch: barItemClick.asDriver(onErrorDriveWith: .empty()))
+                favriateSwitch: barItemClick.asDriver(onErrorDriveWith: .empty()),
+                itemSelected: itemSelected.asDriver(onErrorDriveWith: .empty()))
         )
 
         output.dataChanged
@@ -87,6 +84,10 @@ class PMListVC: UIViewController {
 
         output.errorDisplay
             .drive(view.showErrorToast)
+            .disposed(by: bag)
+
+        output.config
+            .drive()
             .disposed(by: bag)
     }
 
@@ -117,6 +118,10 @@ extension PMListVC: UICollectionViewDelegate {
                                contentSize: scrollView.contentSize,
                                boundSize: scrollView.bounds.size))
     }
+
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        itemSelected.accept(indexPath)
+    }
 }
 
 // MARK: UICollectionViewDataSource
@@ -125,7 +130,8 @@ extension PMListVC: UICollectionViewDataSource {
         return dataDisplay.count
     }
 
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    func collectionView(_ collectionView: UICollectionView,
+                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PMListCell.cellID, for: indexPath)
         (cell as? PMListCell)?.config(with: dataDisplay[indexPath.row])
         return cell
