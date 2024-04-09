@@ -11,12 +11,12 @@ import UIKit
 class PMDetialCoordinator: CoordinatorProtocol {
     private weak var nav: UINavigationController?
     private let pokemonName: String
-    
+
     init(nav: UINavigationController?, name: String) {
         self.nav = nav
         self.pokemonName = name
     }
-    
+
     func start(animate: Bool) {
         let vm = PMDetailVM(name: pokemonName)
         let detilVC = PMDetialVC(vm: vm)
@@ -26,5 +26,4 @@ class PMDetialCoordinator: CoordinatorProtocol {
     deinit {
         print("PMDetialCoordinator deinit")
     }
-
 }

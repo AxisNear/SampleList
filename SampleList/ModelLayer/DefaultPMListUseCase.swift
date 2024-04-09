@@ -67,8 +67,7 @@ class DefaultPMListUseCase: PokemonListUseCaseProtocol {
         if isFavoriteMode {
             let sourceJustName = favortieRepo.favoriteList.map({ PokemonList.PokemonSource(name: $0, url: "") })
             return .just(sourceJustName)
-        } else {
-            return .just(pokemonSources)
         }
+        return .just(pokemonSources)
     }
 }

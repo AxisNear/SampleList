@@ -23,7 +23,9 @@ class PMListCellVM {
 
     let useCase: DefaultPMInfoUseCase
     let favroiteUseCase: DefaultFavoriteUseCase
-    init(useCase: DefaultPMInfoUseCase = DefaultPMInfoUseCase(), favortieUseCase: DefaultFavoriteUseCase = DefaultFavoriteUseCase()) {
+
+    init(useCase: DefaultPMInfoUseCase = DefaultPMInfoUseCase(),
+         favortieUseCase: DefaultFavoriteUseCase = DefaultFavoriteUseCase()) {
         self.useCase = useCase
         self.favroiteUseCase = favortieUseCase
     }

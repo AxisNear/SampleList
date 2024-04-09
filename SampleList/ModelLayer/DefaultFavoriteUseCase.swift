@@ -22,8 +22,7 @@ class DefaultFavoriteUseCase {
     func favoirteToggle(name: String) -> Observable<Bool> {
         if favoriteState(name: name) {
             return .just(favoriteRepo.deleteFavorte(name: name))
-        } else {
-            return .just(favoriteRepo.addFavotite(name: name))
         }
+        return .just(favoriteRepo.addFavotite(name: name))
     }
 }

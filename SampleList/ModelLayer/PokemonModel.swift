@@ -1,6 +1,3 @@
-//
-//  PokemonModel.swift
-//  SampleList
 
 import Foundation
 

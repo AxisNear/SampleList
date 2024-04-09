@@ -43,7 +43,9 @@ class PMListVM {
     private let loadmoreOffset: CGFloat
     private var coordinator: PMListCoordinator
 
-    init(coordinator: PMListCoordinator, useCase: PokemonListUseCaseProtocol = DefaultPMListUseCase(), loadMoreOffset: CGFloat = 100) {
+    init(coordinator: PMListCoordinator,
+         useCase: PokemonListUseCaseProtocol = DefaultPMListUseCase(),
+         loadMoreOffset: CGFloat = 100) {
         self.useCase = useCase
         self.loadmoreOffset = loadMoreOffset
         self.coordinator = coordinator

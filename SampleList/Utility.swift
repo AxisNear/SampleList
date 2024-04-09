@@ -1,10 +1,3 @@
-//
-//  Utility.swift
-//  SampleList
-//
-//  Created by chiayu Yen on 2024/4/6.
-//
-
 import Foundation
 import Kingfisher
 import RxCocoa
@@ -94,7 +87,7 @@ extension UIView {
             }, completion: { _ in
                 UIView.animate(withDuration: 0.3, delay: 1, animations: {
                     toastLabel.alpha = 0
-                },completion: { _ in
+                }, completion: { _ in
                     toastLabel.removeFromSuperview()
                 })
             })

@@ -1,4 +1,3 @@
-
 import RxCocoa
 import RxSwift
 import SnapKit
@@ -124,6 +123,7 @@ extension PMListVC: UICollectionViewDelegate {
                                contentSize: scrollView.contentSize,
                                boundSize: scrollView.bounds.size))
     }
+
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         itemSelected.accept(indexPath)
     }
@@ -135,7 +135,8 @@ extension PMListVC: UICollectionViewDataSource {
         return dataDisplay.count
     }
 
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    func collectionView(_ collectionView: UICollectionView,
+                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PMListCell.cellID, for: indexPath)
         (cell as? PMListCell)?.config(with: dataDisplay[indexPath.row])
         return cell
