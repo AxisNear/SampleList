@@ -17,14 +17,14 @@ final class PMListUseCaseTest: XCTestCase {
         let useCase = DefaultPMListUseCase(remoteRepo: repo)
         XCTAssertEqual(useCase.canLoadMore, false)
         let obsever = scheduler.createObserver([PokemonList.PokemonSource].self)
-        useCase.fetchIfEmpty()
+        useCase.fetchIfNeed()
             .subscribe(obsever)
             .disposed(by: bag)
 
         XCTAssertEqual(useCase.pokemonSources.count, 2)
         XCTAssertEqual(useCase.canLoadMore, true)
 
-        useCase.fetchIfEmpty()
+        useCase.fetchIfNeed()
             .subscribe(obsever)
             .disposed(by: bag)
 

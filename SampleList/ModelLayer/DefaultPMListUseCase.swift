@@ -5,7 +5,7 @@ protocol PokemonListUseCaseProtocol {
     var canLoadMore: Bool { get }
     var pokemonSources: [PokemonList.PokemonSource] { get }
 
-    func fetchIfEmpty() -> Observable<[PokemonList.PokemonSource]>
+    func fetchIfNeed() -> Observable<[PokemonList.PokemonSource]>
     func refresh() -> Observable<[PokemonList.PokemonSource]>
     func loadmore() -> Observable<[PokemonList.PokemonSource]>
 
@@ -29,12 +29,19 @@ class DefaultPMListUseCase: PokemonListUseCaseProtocol {
         return nextUrl?.isEmpty == false
     }
 
-    func fetchIfEmpty() -> Observable<[PokemonList.PokemonSource]> {
+    func fetchIfNeed() -> Observable<[PokemonList.PokemonSource]> {
+        if isFavoriteMode {
+            let sourceJustName = favortieRepo.favoriteList.map({ PokemonList.PokemonSource(name: $0, url: "") })
+            return .just(sourceJustName)
+        }
         guard pokemonSources.isEmpty else { return .empty() }
         return refresh()
     }
 
     func refresh() -> Observable<[PokemonList.PokemonSource]> {
+        if isFavoriteMode {
+            return .empty()
+        }
         return remoteRepo.fetchPokemonList(url: "")
             .do(onNext: { [weak self] _list in
                 self?.nextUrl = _list.next
@@ -50,7 +57,7 @@ class DefaultPMListUseCase: PokemonListUseCaseProtocol {
     }
 
     func loadmore() -> Observable<[PokemonList.PokemonSource]> {
-        guard let nextUrl, canLoadMore else { return .empty()}
+        guard let nextUrl, canLoadMore, isFavoriteMode == false else { return .empty()}
         return remoteRepo.fetchPokemonList(url: nextUrl)
             .do(onNext: { [weak self] _list in
                 self?.nextUrl = _list.next

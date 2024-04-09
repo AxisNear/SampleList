@@ -58,7 +58,7 @@ class PMListVM {
             .filter({ $0 == true })
             .flatMapLatest({ [weak self] _ -> Driver<[PokemonList.PokemonSource]> in
                 guard let self else { return .empty() }
-                return self.useCase.fetchIfEmpty()
+                return self.useCase.fetchIfNeed()
                     .trackError(errorRelay: errorOutput)
                     .trackIndicator(indicator: indicatorOuput)
                     .asDriver(onErrorJustReturn: .init())

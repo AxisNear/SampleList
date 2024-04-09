@@ -180,7 +180,7 @@ private class FakeListUseCase: PokemonListUseCaseProtocol {
     var hasPokemondSources: Bool = false
     var canLoadMore: Bool = false
     var sendError: Bool = false
-    func fetchIfEmpty() -> RxSwift.Observable<[SampleList.PokemonList.PokemonSource]> {
+    func fetchIfNeed() -> RxSwift.Observable<[SampleList.PokemonList.PokemonSource]> {
         if sendError == true {
             return .error(NSError())
         }
