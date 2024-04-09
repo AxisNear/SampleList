@@ -34,8 +34,8 @@ class PMListCellVM {
             .flatMapLatest({ [weak useCase] name -> Driver<PokemonInfo?> in
                 guard let useCase else { return .empty() }
                 return useCase.fetchInfoWith(name: name)
+                    .mapToOptional()
                     .trackIndicator(indicator: indicatorTracker)
-                    .map({ info -> PokemonInfo? in return info })
                     .asDriver(onErrorJustReturn: nil)
             })
 

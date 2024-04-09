@@ -18,4 +18,12 @@ class DefaultPMInfoUseCase {
     func fetchInfoWith(name: String) -> Observable<PokemonInfo> {
         return repo.fetchPokemonInfoForm(name: name)
     }
+
+    func fetchSpecies(name: String) -> Observable<PokemonSpecies> {
+        return repo.fetchSpecies(name: name)
+    }
+
+    func fetchEvolutionChain(url: String) -> Observable<PokemonEvolutionChain> {
+        return repo.fetchEvolutionChain(url: url)
+    }
 }

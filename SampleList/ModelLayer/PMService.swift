@@ -4,7 +4,7 @@ import Foundation
 import RxSwift
 
 enum PokemonAPI {
-    case listPokemon, info(String)
+    case listPokemon, info(String), species(String)
 
     var endPoint: String {
         switch self {
@@ -12,6 +12,8 @@ enum PokemonAPI {
             return "https://pokeapi.co/api/v2/pokemon"
         case .info(let name):
             return "https://pokeapi.co/api/v2/pokemon/\(name)"
+        case .species(let name):
+            return "https://pokeapi.co/api/v2/pokemon-species/\(name)"
         }
     }
 }

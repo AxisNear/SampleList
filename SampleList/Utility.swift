@@ -30,6 +30,10 @@ extension ObservableType {
             indicator?.accept(false)
         })
     }
+
+    func mapToOptional() -> Observable<Element?> {
+        return map({ $0 })
+    }
 }
 
 extension SharedSequence where SharingStrategy == DriverSharingStrategy {

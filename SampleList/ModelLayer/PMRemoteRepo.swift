@@ -4,6 +4,8 @@ import RxSwift
 protocol PMRemoteRepoProtocol {
     func fetchPokemonList(url: String) -> Observable<PokemonList>
     func fetchPokemonInfoForm(name: String) -> Observable<PokemonInfo>
+    func fetchSpecies(name: String) -> Observable<PokemonSpecies>
+    func fetchEvolutionChain(url: String) -> Observable<PokemonEvolutionChain>
 }
 
 class PMRemoteRepo: PMRemoteRepoProtocol {
@@ -33,6 +35,22 @@ class PMRemoteRepo: PMRemoteRepoProtocol {
             .map({ data in
                 let decoder = JSONDecoder()
                 return try decoder.decode(PokemonInfo.self, from: data)
-        })
+            })
+    }
+
+    func fetchSpecies(name: String) -> Observable<PokemonSpecies> {
+        return service.fetchData(api: .species(name))
+            .map({ data in
+                let decoder = JSONDecoder()
+                return try decoder.decode(PokemonSpecies.self, from: data)
+            })
+    }
+
+    func fetchEvolutionChain(url: String) -> Observable<PokemonEvolutionChain> {
+        return service.fetchData(url: url)
+            .map({ data in
+                let decoder = JSONDecoder()
+                return try decoder.decode(PokemonEvolutionChain.self, from: data)
+            })
     }
 }
